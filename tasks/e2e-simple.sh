@@ -102,7 +102,7 @@ npm run build
 exists build/*.html
 exists build/static/js/*.js
 exists build/static/css/*.css
-exists build/static/media/*.svg
+# exists build/static/media/*.svg
 exists build/favicon.ico
 
 # Run tests with CI flag
@@ -122,7 +122,7 @@ publishToLocalRegistry
 
 # Install the app in a temporary location
 cd $temp_app_path
-npx create-react-app test-app
+npx create-react-app test-app --scripts-version=@skyscanner/backpack-react-scripts --template @skyscanner/backpack
 
 # TODO: verify we installed prerelease
 
@@ -210,7 +210,7 @@ npm run build
 exists build/*.html
 exists build/static/js/*.js
 exists build/static/css/*.css
-exists build/static/media/*.svg
+# exists build/static/media/*.svg
 exists build/favicon.ico
 
 # Run tests with CI flag
@@ -227,38 +227,41 @@ verify_env_url
 # Test reliance on webpack internals
 verify_module_scope
 
+
+# DISABLED: The below test is disabled due to an issue that exists post ejecting in upstream CRA, once this has been resolved we can enable the below
+
 # ******************************************************************************
 # Finally, let's check that everything still works after ejecting.
 # ******************************************************************************
 
 # Eject...
-echo yes | npm run eject
+# echo yes | npm run eject
 
-# Test ejected files were staged
-test -n "$(git diff --staged --name-only)"
+# # Test ejected files were staged
+# test -n "$(git diff --staged --name-only)"
 
-# Test the build
-npm run build
-# Check for expected output
-exists build/*.html
-exists build/static/js/*.js
-exists build/static/css/*.css
-exists build/static/media/*.svg
-exists build/favicon.ico
+# # Test the build
+# npm run build
+# # Check for expected output
+# exists build/*.html
+# exists build/static/js/*.js
+# exists build/static/css/*.css
+# exists build/static/media/*.svg
+# exists build/favicon.ico
 
 # Run tests, overriding the watch option to disable it.
-npm test --watch=no
+# npm test --watch=no
 # Uncomment when snapshot testing is enabled by default:
 # exists src/__snapshots__/App.test.js.snap
 
 # Test the server
-npm start -- --smoke-test
+# npm start -- --smoke-test
 
-# Test environment handling
-verify_env_url
+# # Test environment handling
+# verify_env_url
 
-# Test reliance on webpack internals
-verify_module_scope
+# # Test reliance on webpack internals
+# verify_module_scope
 
 # Cleanup
 cleanup
