@@ -9,6 +9,7 @@
 - Added experimental support for https://github.com/mzgoddard/hard-source-webpack-plugin/, enabled by `USE_HARD_SOURCE_WEBPACK_PLUGIN=true` environment variable
 - `web` and `ssr` subpaths for each build's output
 - Output build 'status files' (`.build-status`, one for web, one for SSR), which can be watched by a Node.js server to know when builds are in progress or completed.
+- Enabled SRI for SSR builds and support loadable SRI hashes
 
 ## 9.4.0
 

@@ -25,7 +25,7 @@ const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 // const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 // const safePostCssParser = require('postcss-safe-parser');
 // const ManifestPlugin = require('webpack-manifest-plugin');
-// const SubresourceIntegrityPlugin = require('webpack-subresource-integrity');
+const SubresourceIntegrityPlugin = require('webpack-subresource-integrity');
 // const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 // const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
@@ -73,8 +73,8 @@ const customModuleRegexes = bpkReactScriptsConfig.babelIncludePrefixes
     )
   : [];
 const cssModulesEnabled = bpkReactScriptsConfig.cssModules !== false;
-// const crossOriginLoading = bpkReactScriptsConfig.crossOriginLoading || false;
-// const sriEnabled = bpkReactScriptsConfig.sriEnabled || false;
+const crossOriginLoading = bpkReactScriptsConfig.crossOriginLoading || false;
+const sriEnabled = bpkReactScriptsConfig.sriEnabled || false;
 // const supressCssWarnings = bpkReactScriptsConfig.ignoreCssWarnings || false;
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
@@ -211,7 +211,9 @@ module.exports = function (webpackEnv) {
           {
             loader: require.resolve('resolve-url-loader'),
             options: {
-              sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
+              sourceMap: isEnvProduction
+                ? shouldUseSourceMap
+                : isEnvDevelopment,
               root: paths.appSrc,
             },
           },
@@ -224,7 +226,7 @@ module.exports = function (webpackEnv) {
               },
             },
           },
-        ].filter(Boolean),
+        ].filter(Boolean)
       );
     }
     return loaders;
@@ -269,7 +271,7 @@ module.exports = function (webpackEnv) {
           ]
         : paths.appSsrJs,
     output: {
-      // crossOriginLoading: sriEnabled ? 'anonymous' : crossOriginLoading,
+      crossOriginLoading: sriEnabled ? 'anonymous' : crossOriginLoading,
       // The build folder.
       path: paths.appBuildSsr,
       // Add /* filename */ comments to generated require()s in the output.
@@ -981,11 +983,11 @@ module.exports = function (webpackEnv) {
       // https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity
       // This is a security feature that enables browsers to verify that resources
       // they fetch (for example, from a CDN) are delivered without unexpected manipulation.
-      // sriEnabled &&
-      //   new SubresourceIntegrityPlugin({
-      //     enabled: true,
-      //     hashFuncNames: ['sha384'],
-      //   }),
+      sriEnabled &&
+        new SubresourceIntegrityPlugin({
+          enabled: true,
+          hashFuncNames: ['sha384'],
+        }),
       // Moment.js is an extremely popular library that bundles large locale files
       // by default due to how webpack interprets its code. This is a practical
       // solution that requires the user to opt into importing specific locales.
