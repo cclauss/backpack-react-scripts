@@ -10,6 +10,7 @@
 - `web` and `ssr` subpaths for each build's output
 - Output build 'status files' (`.build-status`, one for web, one for SSR), which can be watched by a Node.js server to know when builds are in progress or completed.
 - Enabled SRI for SSR builds and support loadable SRI hashes
+- Fixed an issue with writing stats json for web bundles due to path updates
 
 ## 9.4.0
 
