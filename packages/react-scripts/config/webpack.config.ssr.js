@@ -62,7 +62,6 @@ const getCSSModuleLocalIdent = require('../utils/getCSSModuleLocalIdentWithProje
   appPackageJson.name
 );
 
-const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const LoadablePlugin = require('@loadable/webpack-plugin');
 const sassFunctions = require('bpk-mixins/sass-functions');
 // const camelCase = require('lodash/camelCase');
@@ -90,11 +89,6 @@ const reactRefreshOverlayEntry = require.resolve(
 // Some apps do not need the benefits of saving a web request, so not inlining the chunk
 // makes for a smoother build process.
 // const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false';
-
-// We might not want to use the hard source plugin on environments that won't persist the cache for later
-const useHardSourceWebpackPlugin =
-  process.env.USE_HARD_SOURCE_WEBPACK_PLUGIN === 'true';
-const environmentHash = require('./environmentHash');
 
 const imageInlineSizeLimit = parseInt(
   process.env.IMAGE_INLINE_SIZE_LIMIT || '10000'
@@ -211,7 +205,9 @@ module.exports = function (webpackEnv) {
           {
             loader: require.resolve('resolve-url-loader'),
             options: {
-              sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
+              sourceMap: isEnvProduction
+                ? shouldUseSourceMap
+                : isEnvDevelopment,
               root: paths.appSrc,
             },
           },
@@ -833,19 +829,6 @@ module.exports = function (webpackEnv) {
       ],
     },
     plugins: [
-      useHardSourceWebpackPlugin &&
-        new HardSourceWebpackPlugin({ environmentHash }),
-      useHardSourceWebpackPlugin &&
-        new HardSourceWebpackPlugin.ExcludeModulePlugin([
-          {
-            // HardSource works with mini-css-extract-plugin but due to how
-            // mini-css emits assets, assets are not emitted on repeated builds with
-            // mini-css and hard-source together. Ignoring the mini-css loader
-            // modules, but not the other css loader modules, excludes the modules
-            // that mini-css needs rebuilt to output assets every time.
-            test: /mini-css-extract-plugin[\\/]dist[\\/]loader/,
-          },
-        ]),
       new LoadablePlugin(),
       // Generates an `index.html` file with the <script> injected.
       // new HtmlWebpackPlugin(
