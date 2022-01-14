@@ -64,6 +64,19 @@ const jsWorkerPool = {
   workerParallelJobs: 50,
 };
 
+// thread-loader options
+const jsWorkerPool = {
+  // name of the pool
+  // can be used to create different pools with elsewise identical options
+  name: 'js-pool',
+
+  // can be set to Infinity for watching builds to keep workers alive
+  poolTimeout: 2000,
+  // number of jobs a worker processes in parallel
+  // defaults to 20
+  workerParallelJobs: 50,
+};
+
 const appPackageJson = require(paths.appPackageJson);
 
 const getCSSModuleLocalIdent = require('../utils/getCSSModuleLocalIdentWithProjectName')(
@@ -472,6 +485,16 @@ module.exports = function (webpackEnv) {
                 dataUrlCondition: {
                   maxSize: imageInlineSizeLimit,
                 },
+              },
+            },
+            {
+              test: new RegExp(
+                `(^|/)(${(bpkReactScriptsConfig.amdExcludes || [])
+                  .concat('lodash')
+                  .join('|')})(/|.|$)`
+              ),
+              parser: {
+                amd: false,
               },
             },
             {
