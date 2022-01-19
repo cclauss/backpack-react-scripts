@@ -62,6 +62,7 @@ const resolveModule = (resolveFn, filePath) => {
 module.exports = {
   dotenv: resolveApp('.env'),
   appPath: resolveApp('.'),
+  appBuild: resolveApp(buildPath),
   appBuildWeb: resolveApp('build/web'),
   appBuildSsr: resolveApp('build/ssr'),
   appPublic: resolveApp('public'),
@@ -87,6 +88,7 @@ const resolveOwn = relativePath => path.resolve(__dirname, '..', relativePath);
 module.exports = {
   dotenv: resolveApp('.env'),
   appPath: resolveApp('.'),
+  appBuild: resolveApp(buildPath),
   appBuildWeb: resolveApp('build/web'),
   appBuildSsr: resolveApp('build/ssr'),
   appPublic: resolveApp('public'),
@@ -127,6 +129,7 @@ if (
   module.exports = {
     dotenv: resolveOwn(`${templatePath}/.env`),
     appPath: resolveApp('.'),
+    appBuild: resolveOwn(`../../${buildPath}`),
     appBuildWeb: resolveOwn('../../build/web'),
     appBuildSsr: resolveOwn('../../build/ssr'),
     appPublic: resolveOwn(`${templatePath}/public`),

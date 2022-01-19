@@ -45,6 +45,8 @@ const printHostingInstructions = require('react-dev-utils/printHostingInstructio
 const FileSizeReporter = require('react-dev-utils/FileSizeReporter');
 const printBuildError = require('react-dev-utils/printBuildError');
 
+const isSsr = require('../scripts/utils/isSsr');
+
 const measureFileSizesBeforeBuild =
   FileSizeReporter.measureFileSizesBeforeBuild;
 const printFileSizesAfterBuild = FileSizeReporter.printFileSizesAfterBuild;
@@ -70,7 +72,9 @@ const ssrConfig = ssrConfigFactory('production');
 
 // If an SSR entry file is found, lets make use of webpacks multi-compiler
 // functionality to bundle it in parallel
-const compileSsr = fs.existsSync(paths.appSsrJs);
+const compileSsr = isSsr();
+
+const buildPath = compileSsr ? paths.appBuildWeb : paths.appBuild;
 
 // We require that you explicitly set browsers and do not fall back to
 // browserslist defaults.
@@ -79,12 +83,12 @@ checkBrowsers(paths.appPath, isInteractive)
   .then(() => {
     // First, read the current file sizes in build directory.
     // This lets us display how much they changed later.
-    return measureFileSizesBeforeBuild(paths.appBuildWeb);
+    return measureFileSizesBeforeBuild(buildPath);
   })
   .then(previousFileSizes => {
     // Remove all content but keep the directory so that
     // if you're in it, you don't end up in Trash
-    fs.emptyDirSync(paths.appBuildWeb);
+    fs.emptyDirSync(buildPath);
     // Merge with the public folder
     copyPublicFolder();
     // Start the webpack build
@@ -133,7 +137,7 @@ checkBrowsers(paths.appPath, isInteractive)
       printFileSizesAfterBuild(
         stats,
         previousFileSizes,
-        paths.appBuildWeb,
+        buildPath,
         WARN_AFTER_BUNDLE_GZIP_SIZE,
         WARN_AFTER_CHUNK_GZIP_SIZE
       );
@@ -142,7 +146,7 @@ checkBrowsers(paths.appPath, isInteractive)
       const appPackage = require(paths.appPackageJson);
       const publicUrl = paths.publicUrlOrPath;
       const publicPath = config.output.publicPath;
-      const buildFolder = path.relative(process.cwd(), paths.appBuildWeb);
+      const buildFolder = path.relative(process.cwd(), buildPath);
       printHostingInstructions(
         appPackage,
         publicUrl,
@@ -243,7 +247,7 @@ function build(previousFileSizes) {
 
       if (writeStatsJson) {
         return bfj
-          .write(paths.appBuildWeb + '/bundle-stats.json', stats.toJson())
+          .write(buildPath + '/bundle-stats.json', stats.toJson())
           .then(() => resolve(resolveArgs))
           .catch(error => reject(new Error(error)));
       }
@@ -254,7 +258,7 @@ function build(previousFileSizes) {
 }
 
 function copyPublicFolder() {
-  fs.copySync(paths.appPublic, paths.appBuildWeb, {
+  fs.copySync(paths.appPublic, buildPath, {
     dereference: true,
     filter: file => file !== paths.appHtml,
   });

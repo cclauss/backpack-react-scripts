@@ -39,6 +39,8 @@ const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier');
 // @remove-on-eject-end
 const postcssNormalize = require('postcss-normalize');
 
+const isSsr = require('../scripts/utils/isSsr');
+
 // thread-loader options
 const jsWorkerPool = {
   // name of the pool
@@ -262,7 +264,7 @@ module.exports = function (webpackEnv) {
     output: {
       crossOriginLoading: sriEnabled ? 'anonymous' : crossOriginLoading,
       // The build folder.
-      path: paths.appBuildWeb,
+      path: isSsr() ? paths.appBuildWeb : paths.appBuild,
       // Add /* filename */ comments to generated require()s in the output.
       pathinfo: isEnvDevelopment,
       // There will be one main bundle, and one file per asynchronous chunk.
