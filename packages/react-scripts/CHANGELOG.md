@@ -1,6 +1,9 @@
 # `backpack-react-scripts` Change Log
 
 
+## 9.4.1
+- Update react-refresh to ^0.11.0
+
 ## 9.4.0
 
 - Uninstall `@typescript-eslint/eslint-plugin` and `@typescript-eslint/parser`. These must now be provided either by directly installing them in your project or by an upcoming version of `eslint-config-skyscanner`.
