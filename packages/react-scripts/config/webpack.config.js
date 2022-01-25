@@ -54,6 +54,10 @@ const babelRuntimeRegenerator = require.resolve('@babel/runtime/regenerator', {
   paths: [babelRuntimeEntry],
 });
 
+const appPackageJson = require(paths.appPackageJson);
+
+const bpkReactScriptsConfig = appPackageJson['backpack-react-scripts'] || {};
+
 // Some apps do not need the benefits of saving a web request, so not inlining the chunk
 // makes for a smoother build process.
 const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false';
@@ -299,6 +303,37 @@ module.exports = function (webpackEnv) {
         // This is only used in production mode
         new CssMinimizerPlugin(),
       ],
+      // Automatically split vendor and commons
+      // https://twitter.com/wSokra/status/969633336732905474
+      // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
+      // splitChunks: {
+      //   chunks: 'all',
+      //   name: false,
+      // },
+      splitChunks: bpkReactScriptsConfig.enableAutomaticChunking
+        ? {
+            chunks: 'all',
+            name: isEnvDevelopment,
+            cacheGroups: bpkReactScriptsConfig.vendorsChunkRegex
+              ? {
+                  vendors: {
+                    test: new RegExp(bpkReactScriptsConfig.vendorsChunkRegex),
+                  },
+                }
+              : {},
+          }
+        : {},
+      // Keep the runtime chunk separated to enable long term caching
+      // https://twitter.com/wSokra/status/969679223278505985
+      // https://github.com/facebook/create-react-app/issues/5358
+      // runtimeChunk: {
+      //   name: entrypoint => `runtime-${entrypoint.name}`,
+      // },
+      runtimeChunk: bpkReactScriptsConfig.enableAutomaticChunking
+        ? {
+            name: entrypoint => `runtime-${entrypoint.name}`,
+          }
+        : false,
     },
     resolve: {
       // This allows you to set a fallback for where webpack should look for modules.
