@@ -56,6 +56,8 @@ const babelRuntimeRegenerator = require.resolve('@babel/runtime/regenerator', {
 
 const appPackageJson = require(paths.appPackageJson);
 
+const sassFunctions = require('bpk-mixins/sass-functions');
+
 const bpkReactScriptsConfig = appPackageJson['backpack-react-scripts'] || {};
 
 // Some apps do not need the benefits of saving a web request, so not inlining the chunk
@@ -591,7 +593,10 @@ module.exports = function (webpackEnv) {
                     mode: 'icss',
                   },
                 },
-                'sass-loader'
+                'sass-loader',
+                {
+                  functions: sassFunctions,
+                }
               ),
               // Don't consider CSS imports dead code even if the
               // containing package claims to have no side effects.
@@ -614,7 +619,10 @@ module.exports = function (webpackEnv) {
                     getLocalIdent: getCSSModuleLocalIdent,
                   },
                 },
-                'sass-loader'
+                'sass-loader',
+                {
+                  functions: sassFunctions,
+                }
               ),
             },
             // "file" loader makes sure those assets get served by WebpackDevServer.
