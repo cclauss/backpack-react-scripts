@@ -43,6 +43,11 @@ const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier');
 // @remove-on-eject-end
 const postcssNormalize = require('postcss-normalize');
 
+const isSsr = require('../scripts/utils/isSsr');
+
+// Just for the case that `ssr.js` exists in `src` folder but not in SSR mode
+const needBuildSsr = !isSsr() && fs.existsSync(paths.appSsrJs);
+
 // // thread-loader options
 // const jsWorkerPool = {
 //   // name of the pool
@@ -265,7 +270,7 @@ module.exports = function (webpackEnv) {
     output: {
       crossOriginLoading: sriEnabled ? 'anonymous' : crossOriginLoading,
       // The build folder.
-      path: paths.appBuildSsr,
+      path: needBuildSsr ? paths.appBuild : paths.appBuildSsr,
       // Add /* filename */ comments to generated require()s in the output.
       pathinfo: isEnvDevelopment,
       // There will be one main bundle, and one file per asynchronous chunk.
@@ -275,7 +280,7 @@ module.exports = function (webpackEnv) {
       //   : isEnvDevelopment && 'static/js/bundle.js',
       // TODO: remove this when upgrading to webpack 5
       futureEmitAssets: true,
-      filename: 'ssr.[hash:8].js',
+      filename: needBuildSsr ? 'ssr.js' : 'ssr.[hash:8].js',
       libraryTarget: 'commonjs2',
       // There are also additional JS chunk files if you use code splitting.
       chunkFilename: isEnvProduction

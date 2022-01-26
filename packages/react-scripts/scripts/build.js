@@ -74,6 +74,9 @@ const ssrConfig = ssrConfigFactory('production');
 // functionality to bundle it in parallel
 const compileSsr = isSsr();
 
+// Just for the case that `ssr.js` exists in `src` folder but not in SSR mode
+const needBuildSsr = !compileSsr && fs.existsSync(paths.appSsrJs);
+
 const buildPath = compileSsr ? paths.appBuildWeb : paths.appBuild;
 
 // We require that you explicitly set browsers and do not fall back to
@@ -100,15 +103,15 @@ checkBrowsers(paths.appPath, isInteractive)
       // with upstream a pain. The rest of the code in this function relies on
       // `config` and `stats` being an object as opposed to an array (from
       // webpack's multi-compiler feature.)
-      if (compileSsr) {
+      if (compileSsr || needBuildSsr) {
         stats = stats.stats[0];
       }
 
       // The SSR config still omits a css file - it's not yet possible to omit
       // file output in ExtractTextPlugin. This is not needed so lets clean
       // it up to avoid confusion.
-      const ssrCssPath = path.join(paths.appBuildSsr, 'ssr.css');
-      const ssrCssMapPath = path.join(paths.appBuildSsr, 'ssr.css.map');
+      const ssrCssPath = path.join(needBuildSsr ? paths.appBuild : paths.appBuildSsr, 'ssr.css');
+      const ssrCssMapPath = path.join(needBuildSsr ? paths.appBuild : paths.appBuildSsr, 'ssr.css.map');
       if (fs.existsSync(ssrCssPath)) {
         fs.unlinkSync(ssrCssPath);
       }
@@ -184,7 +187,7 @@ function build(previousFileSizes) {
 
   let finalConfig = config;
 
-  if (compileSsr) {
+  if (compileSsr || needBuildSsr) {
     finalConfig = [config, ssrConfig];
   }
 
