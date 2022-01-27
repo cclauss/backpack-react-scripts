@@ -224,21 +224,23 @@ exists node_modules/react-scripts-fork
 # test ! -e test-app-should-not-exist/package.json
 # test ! -d test-app-should-not-exist/node_modules
 
-# ******************************************************************************
-# Test project folder is not deleted when creating app over existing folder
-# ******************************************************************************
+# TODO: Remove this test
+# Detail Here: https://github.com/facebook/create-react-app/blob/main/packages/create-react-app/createReactApp.js#L887-L906
+# # ******************************************************************************
+# # Test project folder is not deleted when creating app over existing folder
+# # ******************************************************************************
 
-cd "$temp_app_path"
-mkdir test-app-should-remain
-echo '## Hello' > ./test-app-should-remain/README.md
-# we will install a non-existing package to simulate a failed installation.
-npx create-react-app test-app-should-remain --scripts-version=`date +%s` || true
-# confirm the file exist
-test -e test-app-should-remain/README.md
-# confirm only README.md and error log are the only files in the directory
-if [ "$(ls -1 ./test-app-should-remain | wc -l | tr -d '[:space:]')" != "2" ]; then
-  false
-fi
+# cd "$temp_app_path"
+# mkdir test-app-should-remain
+# echo '## Hello' > ./test-app-should-remain/README.md
+# # we will install a non-existing package to simulate a failed installation.
+# npx create-react-app test-app-should-remain --scripts-version=`date +%s` || true
+# # confirm the file exist
+# test -e test-app-should-remain/README.md
+# # confirm only README.md and error log are the only files in the directory
+# if [ "$(ls -1 ./test-app-should-remain | wc -l | tr -d '[:space:]')" != "2" ]; then
+#   false
+# fi
 
 # ******************************************************************************
 # Test --scripts-version with a scoped fork tgz of react-scripts
