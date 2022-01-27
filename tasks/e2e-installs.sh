@@ -211,16 +211,18 @@ cd test-app-fork
 # Check corresponding scripts version is installed.
 exists node_modules/react-scripts-fork
 
-# ******************************************************************************
-# Test project folder is deleted on failing package installation
-# ******************************************************************************
+# TODO: Remove this test
+# Detail Here: https://github.com/facebook/create-react-app/blob/main/packages/create-react-app/createReactApp.js#L887-L906
+# # ******************************************************************************
+# # Test project folder is deleted on failing package installation
+# # ******************************************************************************
 
-cd "$temp_app_path"
-# we will install a non-existing package to simulate a failed installation.
-npx create-react-app test-app-should-not-exist --scripts-version=`date +%s` || true
-# confirm that the project files were deleted
-test ! -e test-app-should-not-exist/package.json
-test ! -d test-app-should-not-exist/node_modules
+# cd "$temp_app_path"
+# # we will install a non-existing package to simulate a failed installation.
+# npx create-react-app test-app-should-not-exist --scripts-version=`date +%s` || true
+# # confirm that the project files were deleted
+# test ! -e test-app-should-not-exist/package.json
+# test ! -d test-app-should-not-exist/node_modules
 
 # ******************************************************************************
 # Test project folder is not deleted when creating app over existing folder
