@@ -10,14 +10,15 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v1
+
+      - name: Use Node.js
+        uses: actions/setup-node@v2
         with:
-          node-version: '14'
-          cache: 'npm'
-      - name: Install npm@8
-        run: npm i -g npm@8
+          node-version: 14.x
+
       - name: Install
-        run: npm ci --prefer-offline
+        run: yarn --no-progress --non-interactive --no-lockfile
+
       - name: Alex
         run: npm run alex
