@@ -772,7 +772,9 @@ module.exports = function (webpackEnv) {
                 },
                 'sass-loader',
                 {
-                  functions: sassFunctions,
+                  sassOptions: {
+                    functions: sassFunctions,
+                  },
                 }
               ),
               // Don't consider CSS imports dead code even if the
@@ -812,7 +814,9 @@ module.exports = function (webpackEnv) {
                 },
                 'sass-loader',
                 {
-                  functions: sassFunctions,
+                  sassOptions: {
+                    functions: sassFunctions,
+                  },
                 }
               ),
             },
