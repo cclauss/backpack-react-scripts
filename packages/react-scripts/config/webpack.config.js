@@ -95,6 +95,9 @@ const hasJsxRuntime = (() => {
   }
 })();
 
+
+const getSplitChunksConfig = require('../backpackify/feature1/splitChunks');
+
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
 module.exports = function (webpackEnv) {
@@ -299,6 +302,7 @@ module.exports = function (webpackEnv) {
         // This is only used in production mode
         new CssMinimizerPlugin(),
       ],
+      ...getSplitChunksConfig(isEnvDevelopment),
     },
     resolve: {
       // This allows you to set a fallback for where webpack should look for modules.
