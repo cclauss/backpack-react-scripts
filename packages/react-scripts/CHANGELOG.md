@@ -1,5 +1,15 @@
 # `backpack-react-scripts` Change Log
 
+## 9.6.0
+
+- Upgrade node.js to V16.
+- Implement sassFunctions.
+- Remove the dependency of bpk-mixins.
+- Upgrade node-sass to V6, never rely on the peerDenpendecy of node-sass from bpk-mixins, BRS can upgrade node-sass to whatever version it wants.
+
+## 9.5.1
+
+- Upgrade sass-loader to V10 to support to set threadpoolzise by configuring the UV_THREADPOOL_SIZE env var to improve the compiling performance
 
 ## 9.4.0
 

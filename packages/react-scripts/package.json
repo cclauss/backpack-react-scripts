@@ -1,6 +1,6 @@
 {
   "name": "@skyscanner/backpack-react-scripts",
-  "version": "9.7.0",
+  "version": "9.5.1",
   "description": "Backpack configuration and scripts for Create React App.",
   "repository": {
     "type": "git",
@@ -9,7 +9,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": "^10.12.0 || ^12.0.0 || ^14.0.0 || ^16.0.0"
+    "node": ">=14"
   },
   "files": [
     "bin",
