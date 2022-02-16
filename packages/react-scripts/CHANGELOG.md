@@ -2,7 +2,7 @@
 
 ## 9.6.0
 
-- Upgrade node.js to V16.
+- Limit to support node.js version to equal or higer than v14.
 - Implement sassFunctions.
 - Remove the dependency of bpk-mixins.
 - Upgrade node-sass to V6, never rely on the peerDenpendecy of node-sass from bpk-mixins, BRS can upgrade node-sass to whatever version it wants.
