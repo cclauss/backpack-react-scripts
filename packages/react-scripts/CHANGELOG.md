@@ -2,19 +2,27 @@
 
 ## 9.7.0
 
+### Features
+
 - Added support for loadable components.
 - Added `start-ssr` command, to produce Node.js-compatible watched output. Several changes to SSR Webpack config to support.
-- Added `build-ssr` command, to indicate that the build is running in SSR mode, and to build for SSR, you have to do `3` things as below:
-    - Add `ssrEnabled` and set it to `true` (The default is `false`) in `backpack-react-scripts` configuration in `package.json`
-    - Add `ssr.js` file to `src` folder - Keep this as the same as before
-    - Change `build` command to `build-ssr` command - You should know what you are doing is in SSR mode
 - Defined `typeof window` for browser and SSR environments, enabling dead code elimination (https://webpack.js.org/plugins/define-plugin/#usage)
 - SSR output always includes hash as part of filename
 - `web` and `ssr` subpaths for each build's output
 - Output build 'status files' (`.build-status`, one for web, one for SSR), which can be watched by a Node.js server to know when builds are in progress or completed.
 - Enabled SRI for SSR builds and support loadable SRI hashes
+
+### Fixed
+
 - Fixed an issue with writing stats json for web bundles due to path updates
+
+### Breaking
+
 - Removed `hard-source-webpack-plugin` (Means `USE_HARD_SOURCE_WEBPACK_PLUGIN` environment variable is deprecated)
+- Added `build-ssr` command, to indicate that the build is running in SSR mode, and to build for SSR, you have to do `3` things as below:
+    - Add `ssrEnabled` and set it to `true` (The default is `false`) in `backpack-react-scripts` configuration in `package.json`
+    - Add `ssr.js` file to `src` folder - Keep this as the same as before
+    - Change `build` command to `build-ssr` command - You should know what you are doing is in SSR mode
 
 ## 9.4.0
 
