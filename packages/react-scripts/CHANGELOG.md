@@ -2,14 +2,14 @@
 
 ## 9.6.0
 
-- Limit to support node.js version to equal or higer than v14.
-- Implement sassFunctions.
+- Node.js support limits to >=12.
+- Implement sassFunctions inside backpack-react-scripts.
 - Remove the dependency of bpk-mixins.
-- Upgrade node-sass to V6, never rely on the peerDenpendecy of node-sass from bpk-mixins, BRS can upgrade node-sass to whatever version it wants.
+- Upgrade node-sass to v6 ([node-sass Support Node.js 16](https://github.com/sass/node-sass/releases/tag/v6.0.0)), never rely on the peerDenpendecy of node-sass from bpk-mixins, BRS can upgrade node-sass to whatever version it wants.
 
 ## 9.5.1
 
-- Upgrade sass-loader to V10 to support to set threadpoolzise by configuring the UV_THREADPOOL_SIZE env var to improve the compiling performance
+- Upgrade sass-loader to v10 to support to set threadpoolzise by configuring the UV_THREADPOOL_SIZE env var to improve the compiling performance
 
 ## 9.4.0
 
