@@ -20,9 +20,26 @@
 
 - Removed `hard-source-webpack-plugin` (Means `USE_HARD_SOURCE_WEBPACK_PLUGIN` environment variable is deprecated)
 - Added `build-ssr` command, to indicate that the build is running in SSR mode, and to build for SSR, you have to do `3` things as below:
-    - Add `ssrEnabled` and set it to `true` (The default is `false`) in `backpack-react-scripts` configuration in `package.json`
-    - Add `ssr.js` file to `src` folder - Keep this as the same as before
-    - Change `build` command to `build-ssr` command - You should know what you are doing is in SSR mode
+  - Add `ssrEnabled` and set it to `true` (The default is `false`) in `backpack-react-scripts` configuration in `package.json`
+  - Add `ssr.js` file to `src` folder - Keep this as the same as before
+  - Change `build` command to `build-ssr` command - You should know what you are doing is in SSR mode
+
+## 9.6.0
+
+- Node.js support limits to >=12.
+- Implement sassFunctions inside backpack-react-scripts.
+- Remove the dependency of bpk-mixins.
+- Upgrade node-sass to v6 ([node-sass Support Node.js 16](https://github.com/sass/node-sass/releases/tag/v6.0.0)), never rely on the peerDenpendecy of node-sass from bpk-mixins, BRS can upgrade node-sass to whatever version it wants.
+
+## 9.5.1
+
+### Changed
+
+- Upgraded `sass-loader` to `v^10.2.1`, to support developers can set UV_THREADPOOL_SIZE environment variable to improve the performance of compiling Sass to CSS
+
+## 9.5.0
+
+Deprecated version. Do not use.
 
 ## 9.4.0
 

@@ -59,8 +59,9 @@ const appPackageJson = require(paths.appPackageJson);
 const getCSSModuleLocalIdent = require('../utils/getCSSModuleLocalIdentWithProjectName')(
   appPackageJson.name
 );
+
 const LoadablePlugin = require('@loadable/webpack-plugin');
-const sassFunctions = require('bpk-mixins/sass-functions');
+const sassFunctions = require('../utils/sassFunctions');
 const camelCase = require('lodash/camelCase');
 const bpkReactScriptsConfig = appPackageJson['backpack-react-scripts'] || {};
 const customModuleRegexes = bpkReactScriptsConfig.babelIncludePrefixes
@@ -206,7 +207,9 @@ module.exports = function (webpackEnv) {
           {
             loader: require.resolve('resolve-url-loader'),
             options: {
-              sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
+              sourceMap: isEnvProduction
+                ? shouldUseSourceMap
+                : isEnvDevelopment,
               root: paths.appSrc,
             },
           },
@@ -219,7 +222,7 @@ module.exports = function (webpackEnv) {
               },
             },
           },
-        ].filter(Boolean),
+        ].filter(Boolean)
       );
     }
     return loaders;
