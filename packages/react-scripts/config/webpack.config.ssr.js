@@ -58,7 +58,6 @@ const getCSSModuleLocalIdent = require('../utils/getCSSModuleLocalIdentWithProje
   appPackageJson.name
 );
 
-const sassFunctions = require('../utils/sassFunction');
 // const camelCase = require('lodash/camelCase');
 const bpkReactScriptsConfig = appPackageJson['backpack-react-scripts'] || {};
 const customModuleRegexes = bpkReactScriptsConfig.babelIncludePrefixes
@@ -744,11 +743,7 @@ module.exports = function (webpackEnv) {
                     : isEnvDevelopment,
                 },
                 'sass-loader',
-                {
-                  sassOptions: {
-                    functions: sassFunctions,
-                  },
-                }
+                require('../backpack-addons/sassFunctions') // #backpack-addons sassFunctions
               ),
               // Don't consider CSS imports dead code even if the
               // containing package claims to have no side effects.
