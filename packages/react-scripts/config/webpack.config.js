@@ -360,7 +360,7 @@ module.exports = function (webpackEnv) {
           },
         }),
       ],
-      ...require('../backpack-addon/splitChunks')(isEnvDevelopment),  // #backpack-addons splitChunks
+      ...require('../backpack-addons/splitChunks')(isEnvDevelopment),  // #backpack-addons splitChunks
       // Keep the runtime chunk separated to enable long term caching
       // https://twitter.com/wSokra/status/969679223278505985
       // https://github.com/facebook/create-react-app/issues/5358
