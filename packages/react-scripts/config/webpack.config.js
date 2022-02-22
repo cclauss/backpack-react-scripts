@@ -54,10 +54,6 @@ const jsWorkerPool = {
 
 const appPackageJson = require(paths.appPackageJson);
 
-const getCSSModuleLocalIdent = require('../utils/getCSSModuleLocalIdentWithProjectName')(
-  appPackageJson.name
-);
-
 const sassFunctions = require('../utils/sassFunction');
 const camelCase = require('lodash/camelCase');
 const bpkReactScriptsConfig = appPackageJson['backpack-react-scripts'] || {};
@@ -66,7 +62,6 @@ const customModuleRegexes = bpkReactScriptsConfig.babelIncludePrefixes
       prefix => new RegExp(`node_modules[\\/]${prefix}`)
     )
   : [];
-const cssModulesEnabled = bpkReactScriptsConfig.cssModules !== false;
 const crossOriginLoading = bpkReactScriptsConfig.crossOriginLoading || false;
 const sriEnabled = bpkReactScriptsConfig.sriEnabled || false;
 const supressCssWarnings = bpkReactScriptsConfig.ignoreCssWarnings || false;
@@ -172,22 +167,7 @@ module.exports = function (webpackEnv) {
         // package.json
         loader: require.resolve('postcss-loader'),
         options: {
-          // Necessary for external CSS imports to work
-          // https://github.com/facebook/create-react-app/issues/2677
-          ident: 'postcss',
-          plugins: () => [
-            require('postcss-flexbugs-fixes'),
-            require('postcss-preset-env')({
-              autoprefixer: {
-                flexbox: 'no-2009',
-              },
-              stage: 3,
-            }),
-            // Adds PostCSS Normalize as the reset css with default options,
-            // so that it honors browserslist config in package.json
-            // which in turn let's users customize the target behavior as per their needs.
-            postcssNormalize(),
-          ],
+          ...require('../backpack-addons/cssModules').modifyPostCssOption(),  // #backpack-addons cssModulesEnabled
           sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
         },
       },
@@ -679,10 +659,7 @@ module.exports = function (webpackEnv) {
             // of CSS.
             // By default we support CSS Modules with the extension .module.css
             {
-              test: {
-                and: [cssRegex, () => !cssModulesEnabled],
-                exclude: [backpackModulesRegex, scopedBackpackModulesRegex],
-              },
+              test: require('../backpack-addons/cssModules').getStyleTestRegexes('css'),  // #backpack-addons cssModulesEnabled
               exclude: cssModuleRegex,
               use: getStyleLoaders({
                 importLoaders: 1,
@@ -699,26 +676,14 @@ module.exports = function (webpackEnv) {
             // Adds support for CSS Modules (https://github.com/css-modules/css-modules)
             // using the extension .module.css
             {
-              test: [
-                cssModuleRegex,
-                {
-                  and: [cssRegex, () => cssModulesEnabled],
-                },
-                {
-                  and: [
-                    cssRegex,
-                    backpackModulesRegex,
-                    scopedBackpackModulesRegex,
-                  ],
-                },
-              ],
+              test: require('../backpack-addons/cssModules').getStyleTestRegexes('cssModule'),  // #backpack-addons cssModulesEnabled
               use: getStyleLoaders({
                 importLoaders: 1,
                 sourceMap: isEnvProduction
                   ? shouldUseSourceMap
                   : isEnvDevelopment,
                 modules: {
-                  getLocalIdent: getCSSModuleLocalIdent,
+                  getLocalIdent: require('../backpack-addons/cssModules').getCSSModuleLocalIdent(), // #backpack-addons cssModulesEnabled
                 },
               }),
             },
@@ -726,10 +691,7 @@ module.exports = function (webpackEnv) {
             // By default we support SASS Modules with the
             // extensions .module.scss or .module.sass
             {
-              test: {
-                and: [sassRegex, () => !cssModulesEnabled],
-                exclude: [backpackModulesRegex, scopedBackpackModulesRegex],
-              },
+              test: require('../backpack-addons/cssModules').getStyleTestRegexes('sass'), // #backpack-addons cssModulesEnabled
               exclude: sassModuleRegex,
               use: getStyleLoaders(
                 {
@@ -756,19 +718,7 @@ module.exports = function (webpackEnv) {
             // Adds support for CSS Modules, but using SASS
             // using the extension .module.scss or .module.sass
             {
-              test: [
-                sassModuleRegex,
-                {
-                  and: [sassRegex, () => cssModulesEnabled],
-                },
-                {
-                  and: [
-                    sassRegex,
-                    backpackModulesRegex,
-                    scopedBackpackModulesRegex,
-                  ],
-                },
-              ],
+              test: require('../backpack-addons/cssModules').getStyleTestRegexes('sassModule'), // #backpack-addons cssModulesEnabled
               use: getStyleLoaders(
                 {
                   // When using cache-loader, the total count of loaders is up to 4 including cache-loader below the css-loader
@@ -778,7 +728,7 @@ module.exports = function (webpackEnv) {
                     ? shouldUseSourceMap
                     : isEnvDevelopment,
                   modules: {
-                    getLocalIdent: getCSSModuleLocalIdent,
+                    getLocalIdent: require('../backpack-addons/cssModules').getCSSModuleLocalIdent(), // #backpack-addons cssModulesEnabled
                   },
                 },
                 'sass-loader',
