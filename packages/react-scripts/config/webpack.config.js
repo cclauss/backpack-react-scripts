@@ -380,7 +380,7 @@ module.exports = function (webpackEnv) {
               : {},
           }
         : {},
-      ...require('../backpack-addons/runtimeChunk')(), // #backpack-addons runtimeChunk
+      ...require('../backpack-addons/runtimeChunk')('build'), // #backpack-addons runtimeChunk
     },
     externals: isEnvProduction ? bpkReactScriptsConfig.externals || {} : {},
     resolve: {
