@@ -392,7 +392,7 @@ module.exports = function (webpackEnv) {
       //       name: entrypoint => `runtime-${entrypoint.name}`,
       //     }
       //   : false,
-      runtimeChunk: false,
+      ...require('../backpack-addons/runtimeChunk')('ssr'), // #backpack-addons runtimeChunk 
     },
     externals: bpkReactScriptsConfig.ssrExternals || [],
     resolve: {
