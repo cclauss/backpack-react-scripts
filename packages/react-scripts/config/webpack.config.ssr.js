@@ -781,11 +781,7 @@ module.exports = function (webpackEnv) {
                   },
                 },
                 'sass-loader',
-                {
-                  sassOptions: {
-                    functions: sassFunctions,
-                  },
-                }
+                require('../backpack-addons/sassFunctions') // #backpack-addons sassFunctions
               ),
             },
             // "file" loader makes sure those assets get served by WebpackDevServer.
