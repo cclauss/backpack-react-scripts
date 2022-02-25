@@ -21,7 +21,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const safePostCssParser = require('postcss-safe-parser');
 const ManifestPlugin = require('webpack-manifest-plugin');
-const SubresourceIntegrityPlugin = require('webpack-subresource-integrity');
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
@@ -61,14 +60,7 @@ const getCSSModuleLocalIdent = require('../utils/getCSSModuleLocalIdentWithProje
 const sassFunctions = require('../utils/sassFunction');
 const camelCase = require('lodash/camelCase');
 const bpkReactScriptsConfig = appPackageJson['backpack-react-scripts'] || {};
-const customModuleRegexes = bpkReactScriptsConfig.babelIncludePrefixes
-  ? bpkReactScriptsConfig.babelIncludePrefixes.map(
-      prefix => new RegExp(`node_modules[\\/]${prefix}`)
-    )
-  : [];
 const cssModulesEnabled = bpkReactScriptsConfig.cssModules !== false;
-const crossOriginLoading = bpkReactScriptsConfig.crossOriginLoading || false;
-const sriEnabled = bpkReactScriptsConfig.sriEnabled || false;
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -259,7 +251,7 @@ module.exports = function (webpackEnv) {
           ]
         : paths.appIndexJs,
     output: {
-      crossOriginLoading: sriEnabled ? 'anonymous' : crossOriginLoading,
+      ...require('../backpack-addons/crossOriginLoading'),  // #backpack-addon crossOriginLoading
       // The build folder.
       path: isEnvProduction ? paths.appBuild : undefined,
       // Add /* filename */ comments to generated require()s in the output.
@@ -488,13 +480,7 @@ module.exports = function (webpackEnv) {
             // The preset includes JSX, Flow, TypeScript, and some ESnext features.
             {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
-              include: [
-                paths.appSrc,
-                backpackModulesRegex,
-                saddlebagModulesRegex,
-                scopedBackpackModulesRegex,
-                ...customModuleRegexes,
-              ],
+              include: require('../backpack-addons/babelIncludePrefixes')(),  // #backpack-addon babelIncludePrefixes
               loader: require.resolve('babel-loader'),
               options: {
                 customize: require.resolve(
@@ -558,13 +544,7 @@ module.exports = function (webpackEnv) {
             {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
               exclude: /\.storybook/,
-              include: [
-                paths.appSrc,
-                backpackModulesRegex,
-                saddlebagModulesRegex,
-                scopedBackpackModulesRegex,
-                ...customModuleRegexes,
-              ],
+              include: require('../backpack-addons/babelIncludePrefixes')(),  // #backpack-addon babelIncludePrefixes
               use: [
                 {
                   loader: require.resolve('thread-loader'),
@@ -937,15 +917,7 @@ module.exports = function (webpackEnv) {
           };
         },
       }),
-      // Calculate and inject Subresource Integrity (SRI) hashes
-      // https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity
-      // This is a security feature that enables browsers to verify that resources
-      // they fetch (for example, from a CDN) are delivered without unexpected manipulation.
-      sriEnabled &&
-        new SubresourceIntegrityPlugin({
-          enabled: true,
-          hashFuncNames: ['sha384'],
-        }),
+      require('../backpack-addons/sriEnabled')(), // #backpack-addon sriEnabled
       // Moment.js is an extremely popular library that bundles large locale files
       // by default due to how webpack interprets its code. This is a practical
       // solution that requires the user to opt into importing specific locales.
