@@ -60,11 +60,6 @@ const getCSSModuleLocalIdent = require('../utils/getCSSModuleLocalIdentWithProje
 const sassFunctions = require('../utils/sassFunction');
 const camelCase = require('lodash/camelCase');
 const bpkReactScriptsConfig = appPackageJson['backpack-react-scripts'] || {};
-const customModuleRegexes = bpkReactScriptsConfig.babelIncludePrefixes
-  ? bpkReactScriptsConfig.babelIncludePrefixes.map(
-      prefix => new RegExp(`node_modules[\\/]${prefix}`)
-    )
-  : [];
 const cssModulesEnabled = bpkReactScriptsConfig.cssModules !== false;
 const supressCssWarnings = bpkReactScriptsConfig.ignoreCssWarnings || false;
 
@@ -486,13 +481,7 @@ module.exports = function (webpackEnv) {
             // The preset includes JSX, Flow, TypeScript, and some ESnext features.
             {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
-              include: [
-                paths.appSrc,
-                backpackModulesRegex,
-                saddlebagModulesRegex,
-                scopedBackpackModulesRegex,
-                ...customModuleRegexes,
-              ],
+              include: require('../backpack-addons/babelIncludePrefixes')(),  // #backpack-addon babelIncludePrefixes
               loader: require.resolve('babel-loader'),
               options: {
                 customize: require.resolve(
@@ -556,13 +545,7 @@ module.exports = function (webpackEnv) {
             {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
               exclude: /\.storybook/,
-              include: [
-                paths.appSrc,
-                backpackModulesRegex,
-                saddlebagModulesRegex,
-                scopedBackpackModulesRegex,
-                ...customModuleRegexes,
-              ],
+              include: require('../backpack-addons/babelIncludePrefixes')(),  // #backpack-addon babelIncludePrefixes
               use: [
                 {
                   loader: require.resolve('thread-loader'),
