@@ -54,10 +54,6 @@ const postcssNormalize = require('postcss-normalize');
 
 const appPackageJson = require(paths.appPackageJson);
 
-const getCSSModuleLocalIdent = require('../utils/getCSSModuleLocalIdentWithProjectName')(
-  appPackageJson.name
-);
-
 const sassFunctions = require('../utils/sassFunction');
 // const camelCase = require('lodash/camelCase');
 const bpkReactScriptsConfig = appPackageJson['backpack-react-scripts'] || {};
