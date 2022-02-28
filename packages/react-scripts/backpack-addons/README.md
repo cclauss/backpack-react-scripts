@@ -26,6 +26,7 @@ Our react scripts fork includes a number of custom configuration items in order 
 - Add a description of the new feature in the table above the current document.
 
 ## How to upgrade from the upstream `facebook/create-react-app` repo
+
 - Replace all of `packages/react-scripts` with the upstream version.
 - Restore `packages/react-scripts/backpack-addons` all features.
 - Restore (will require manual work+checking) every line which has a `// #backpack-addon` comment.
