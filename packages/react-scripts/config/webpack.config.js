@@ -53,7 +53,6 @@ const jsWorkerPool = {
 
 const appPackageJson = require(paths.appPackageJson);
 
-const sassFunctions = require('../utils/sassFunction');
 const camelCase = require('lodash/camelCase');
 const bpkReactScriptsConfig = appPackageJson['backpack-react-scripts'] || {};
 
@@ -346,29 +345,10 @@ module.exports = function (webpackEnv) {
           },
         }),
       ],
-      // Automatically split vendor and commons
-      // https://twitter.com/wSokra/status/969633336732905474
-      // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
-      // splitChunks: {
-      //   chunks: 'all',
-      //   name: false,
-      // },
-      splitChunks: bpkReactScriptsConfig.enableAutomaticChunking
-        ? {
-            chunks: 'all',
-            name: isEnvDevelopment,
-            cacheGroups: bpkReactScriptsConfig.vendorsChunkRegex
-              ? {
-                  vendors: {
-                    test: new RegExp(bpkReactScriptsConfig.vendorsChunkRegex),
-                  },
-                }
-              : {},
-          }
-        : {},
+      ...require('../backpack-addons/splitChunks')(isEnvDevelopment),  // #backpack-addons splitChunks
       ...require('../backpack-addons/runtimeChunk').runtimeChunk, // #backpack-addons runtimeChunk
     },
-    externals: isEnvProduction ? bpkReactScriptsConfig.externals || {} : {},
+    ...require('../backpack-addons/externals').externals(isEnvProduction), // #backpack-addons externals
     resolve: {
       // This allows you to set a fallback for where webpack should look for modules.
       // We placed these paths second because we want `node_modules` to "win"
@@ -440,16 +420,7 @@ module.exports = function (webpackEnv) {
                 name: 'static/media/[name].[hash:8].[ext]',
               },
             },
-            {
-              test: new RegExp(
-                `(^|/)(${(bpkReactScriptsConfig.amdExcludes || [])
-                  .concat('lodash')
-                  .join('|')})(/|.|$)`
-              ),
-              parser: {
-                amd: false,
-              },
-            },
+            require('../backpack-addons/amdExcludes'),  // #backpack-addons amdExcludes
             // "url" loader works like "file" loader except that it embeds assets
             // smaller than specified limit in bytes as data URLs to avoid requests.
             // A missing `test` is equivalent to a match.
@@ -687,11 +658,7 @@ module.exports = function (webpackEnv) {
                     : isEnvDevelopment,
                 },
                 'sass-loader',
-                {
-                  sassOptions: {
-                    functions: sassFunctions,
-                  },
-                }
+                require('../backpack-addons/sassFunctions')  // #backpack-addons sassFunctions
               ),
               // Don't consider CSS imports dead code even if the
               // containing package claims to have no side effects.
@@ -716,11 +683,7 @@ module.exports = function (webpackEnv) {
                   },
                 },
                 'sass-loader',
-                {
-                  sassOptions: {
-                    functions: sassFunctions,
-                  },
-                }
+                require('../backpack-addons/sassFunctions')  // #backpack-addons sassFunctions
               ),
             },
             // "file" loader makes sure those assets get served by WebpackDevServer.

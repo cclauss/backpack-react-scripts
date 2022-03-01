@@ -54,7 +54,6 @@ const postcssNormalize = require('postcss-normalize');
 
 const appPackageJson = require(paths.appPackageJson);
 
-const sassFunctions = require('../utils/sassFunction');
 // const camelCase = require('lodash/camelCase');
 const bpkReactScriptsConfig = appPackageJson['backpack-react-scripts'] || {};
 
@@ -385,7 +384,7 @@ module.exports = function (webpackEnv) {
       //   : false,
       ...require('../backpack-addons/runtimeChunk').ssrRuntimeChunk, // #backpack-addons runtimeChunk 
     },
-    externals: bpkReactScriptsConfig.ssrExternals || [],
+    ...require('../backpack-addons/externals').ssrExternals(), // #backpack-addons externals
     resolve: {
       // This allows you to set a fallback for where webpack should look for modules.
       // We placed these paths second because we want `node_modules` to "win"
@@ -457,16 +456,7 @@ module.exports = function (webpackEnv) {
                 name: 'static/media/[name].[hash:8].[ext]',
               },
             },
-            {
-              test: new RegExp(
-                `(^|/)(${(bpkReactScriptsConfig.amdExcludes || [])
-                  .concat('lodash')
-                  .join('|')})(/|.|$)`
-              ),
-              parser: {
-                amd: false,
-              },
-            },
+            require('../backpack-addons/amdExcludes'),  // #backpack-addons amdExcludes
             // "url" loader works like "file" loader except that it embeds assets
             // smaller than specified limit in bytes as data URLs to avoid requests.
             // A missing `test` is equivalent to a match.
@@ -705,11 +695,7 @@ module.exports = function (webpackEnv) {
                     : isEnvDevelopment,
                 },
                 'sass-loader',
-                {
-                  sassOptions: {
-                    functions: sassFunctions,
-                  },
-                }
+                require('../backpack-addons/sassFunctions') // #backpack-addons sassFunctions
               ),
               // Don't consider CSS imports dead code even if the
               // containing package claims to have no side effects.
@@ -735,11 +721,7 @@ module.exports = function (webpackEnv) {
                   },
                 },
                 'sass-loader',
-                {
-                  sassOptions: {
-                    functions: sassFunctions,
-                  },
-                }
+                require('../backpack-addons/sassFunctions') // #backpack-addons sassFunctions
               ),
             },
             // "file" loader makes sure those assets get served by WebpackDevServer.
