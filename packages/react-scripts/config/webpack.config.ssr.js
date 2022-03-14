@@ -892,11 +892,7 @@ module.exports = function (webpackEnv) {
       // https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity
       // This is a security feature that enables browsers to verify that resources
       // they fetch (for example, from a CDN) are delivered without unexpected manipulation.
-      sriEnabled &&
-        new SubresourceIntegrityPlugin({
-          enabled: true,
-          hashFuncNames: ['sha384'],
-        }),
+      require('../backpack-addons/sriEnabled')(), // #backpack-addon sriEnabled
       // Moment.js is an extremely popular library that bundles large locale files
       // by default due to how webpack interprets its code. This is a practical
       // solution that requires the user to opt into importing specific locales.
