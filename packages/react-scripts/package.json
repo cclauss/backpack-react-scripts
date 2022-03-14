@@ -1,6 +1,6 @@
 {
   "name": "@skyscanner/backpack-react-scripts",
-  "version": "9.5.1",
+  "version": "9.6.1",
   "description": "Backpack configuration and scripts for Create React App.",
   "repository": {
     "type": "git",
@@ -18,7 +18,8 @@
     "scripts",
     "template",
     "template-typescript",
-    "utils"
+    "utils",
+    "backpack-addons"
   ],
   "bin": {
     "react-scripts": "./bin/react-scripts.js"
@@ -28,7 +29,7 @@
     "@babel/core": "7.12.3",
     "@loadable/babel-plugin": "^5.6.0",
     "@loadable/webpack-plugin": "^5.5.0",
-    "@pmmmwh/react-refresh-webpack-plugin": "0.4.3",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.4",
     "@svgr/webpack": "5.5.0",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.6.0",
@@ -81,8 +82,8 @@
     "workbox-webpack-plugin": "5.1.4"
   },
   "devDependencies": {
-    "react": "16.2.0",
-    "react-dom": "16.2.0"
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   },
   "optionalDependencies": {
     "fsevents": "^2.1.3"
