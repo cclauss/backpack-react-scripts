@@ -248,7 +248,7 @@ module.exports = function (webpackEnv) {
           ]
         : paths.appSsrJs,
     output: {
-      crossOriginLoading: sriEnabled ? 'anonymous' : crossOriginLoading,
+      ...require('../backpack-addons/crossOriginLoading'),  // #backpack-addon crossOriginLoading
       // The build folder.
       path: needBuildSsr ? paths.appBuild : paths.appBuildSsr,
       // Add /* filename */ comments to generated require()s in the output.
