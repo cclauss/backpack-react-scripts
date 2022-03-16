@@ -68,7 +68,7 @@ module.exports = class ReactScripts {
     const port = await getPort();
     const serveProcess = execa(
       'npm',
-      ['run', 'serve', '--', '-p', port, '-s', 'build/'],
+      ['run', 'serve', '--', '-p', port, '-s', 'build/web/'],
       {
         cwd: this.root,
       }

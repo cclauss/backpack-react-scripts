@@ -116,8 +116,8 @@ REACT_APP_SHELL_ENV_MESSAGE=fromtheshell \
   npm run build
 
 # Check for expected output
-exists build/*.html
-exists build/static/js/main.*.js
+exists build/web/*.html
+exists build/web/static/js/main.*.js
 
 # Unit tests
 REACT_APP_SHELL_ENV_MESSAGE=fromtheshell \
