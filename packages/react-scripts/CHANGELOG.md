@@ -1,6 +1,6 @@
 # `backpack-react-scripts` Change Log
 
-## 9.7.0
+## 10.0.0
 
 ### Features
 
