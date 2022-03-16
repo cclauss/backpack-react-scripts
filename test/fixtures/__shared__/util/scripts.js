@@ -18,7 +18,7 @@ function execaSafe(...args) {
       rejected: true,
       reason: err,
       stdout: '',
-      stderr: stripAnsi(err.message.split('\n').slice(2).join('\n')),
+      stderr: stripYarn(stripAnsi(err.message.split('\n').slice(2).join('\n'))),
     }));
 }
 
@@ -66,8 +66,8 @@ module.exports = class ReactScripts {
   async serve() {
     const port = await getPort();
     const serveProcess = execa(
-      'npm',
-      ['run', 'serve', '--', '-p', port, '-s', 'build/'],
+      'yarnpkg',
+      ['serve', '--', '-p', port, '-s', 'build/web/'],
       {
         cwd: this.root,
       }
