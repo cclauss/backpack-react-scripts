@@ -18,7 +18,7 @@
 
 ### Breaking
 
-- Removed `hard-source-webpack-plugin` from beta version (Means `USE_HARD_SOURCE_WEBPACK_PLUGIN` environment variable is deprecated)
+- Removed `hard-source-webpack-plugin` (So `USE_HARD_SOURCE_WEBPACK_PLUGIN` environment variable can't be used any more)
 - Added `build-ssr` command, to indicate that the build is running in SSR mode, `3` steps are required for SSR mode:
   - Add `ssrEnabled` and set it to `true` (The default is `false`) in `backpack-react-scripts` configuration in `package.json`
   - Add `ssr.js` file to `src` folder - Keep this as the same as before
