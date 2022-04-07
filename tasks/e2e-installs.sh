@@ -128,7 +128,7 @@ npx create-react-app test-app-version-number --scripts-version=@skyscanner/backp
 cd test-app-version-number
 
 # Check corresponding scripts version is installed.
-exists node_modules/backpack-react-scripts
+exists node_modules/@skyscanner/backpack-react-scripts
 grep '"version": "9.7.0-beta.5"' node_modules/@skyscanner/backpack-react-scripts/package.json
 checkDependencies
 
