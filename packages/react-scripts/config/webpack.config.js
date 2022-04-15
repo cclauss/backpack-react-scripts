@@ -37,6 +37,8 @@ const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier');
 // @remove-on-eject-end
 const createEnvironmentHash = require('./webpack/persistentCache/createEnvironmentHash');
 
+const isSsr = require('../backpack-addons/ssr/isSsr');
+
 const appPackageJson = require(paths.appPackageJson);
 
 const camelCase = require('lodash/camelCase');
