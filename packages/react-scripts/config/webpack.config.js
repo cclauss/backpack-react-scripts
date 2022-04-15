@@ -37,7 +37,7 @@ const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier');
 // @remove-on-eject-end
 const createEnvironmentHash = require('./webpack/persistentCache/createEnvironmentHash');
 
-const isSsr = require('../scripts/utils/isSsr');
+const isSsr = require('../backpack-addons/ssr/isSsr');
 
 // thread-loader options
 const jsWorkerPool = {
