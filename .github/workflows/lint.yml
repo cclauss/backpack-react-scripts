@@ -1,6 +1,10 @@
 name: Lint
 
-on: [push]
+on:
+  push:
+    branches: [fork]
+  pull_request:
+    branches: [fork]
 
 jobs:
   lint:
@@ -9,7 +13,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: 16.x
           cache: 'npm'
       - name: Install npm@8
         run: npm i -g npm@8
