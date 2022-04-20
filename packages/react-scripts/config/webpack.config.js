@@ -115,7 +115,7 @@ module.exports = function (webpackEnv) {
   const shouldUseReactRefresh = env.raw.FAST_REFRESH;
 
   // common function to get style loaders
-  const getStyleLoaders = (cssOptions, preProcessor) => {
+  const getStyleLoaders = (cssOptions, preProcessor, preProcessorOptions = {}) => {
     const loaders = [
       isEnvDevelopment && require.resolve('style-loader'),
       isEnvProduction && {
@@ -188,7 +188,10 @@ module.exports = function (webpackEnv) {
         {
           loader: require.resolve(preProcessor),
           options: {
-            sourceMap: true,
+            ...preProcessorOptions,  // #backpack-addons sassFunctions
+            ...{
+              sourceMap: true,
+            },
           },
         }
       );
@@ -556,7 +559,8 @@ module.exports = function (webpackEnv) {
                     mode: 'icss',
                   },
                 },
-                'sass-loader'
+                'sass-loader',
+                require('../backpack-addons/sassFunctions')  // #backpack-addons sassFunctions
               ),
               // Don't consider CSS imports dead code even if the
               // containing package claims to have no side effects.
@@ -579,7 +583,8 @@ module.exports = function (webpackEnv) {
                     getLocalIdent: getCSSModuleLocalIdent,
                   },
                 },
-                'sass-loader'
+                'sass-loader',
+                require('../backpack-addons/sassFunctions')  // #backpack-addons sassFunctions
               ),
             },
             // "file" loader makes sure those assets get served by WebpackDevServer.
