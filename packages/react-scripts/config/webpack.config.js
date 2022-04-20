@@ -299,6 +299,7 @@ module.exports = function (webpackEnv) {
         // This is only used in production mode
         new CssMinimizerPlugin(),
       ],
+      ...require('../backpack-addons/splitChunks')(isEnvDevelopment),  // #backpack-addons splitChunks
     },
     resolve: {
       // This allows you to set a fallback for where webpack should look for modules.
