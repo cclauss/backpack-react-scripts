@@ -76,6 +76,14 @@ if [ "$EXPECTED" != "$ACTUAL" ]; then
   exit 1
 fi
 
+if hash npm 2>/dev/null
+then
+  npm i -g npm@latest
+fi
+
+# Bootstrap monorepo
+yarn
+
 # Start the local NPM registry
 startLocalRegistry "$root_path"/tasks/verdaccio.yaml
 
@@ -89,17 +97,25 @@ startLocalRegistry "$root_path"/tasks/verdaccio.yaml
 # ./node_modules/.bin/eslint --max-warnings 0 packages/react-error-overlay/src/
 # ./node_modules/.bin/eslint --max-warnings 0 packages/react-scripts/
 
-npm test -w react-error-overlay
+cd packages/react-error-overlay/
+yarn test
 if [ "$AGENT_OS" != 'Windows_NT' ]; then
   # Flow started hanging on Windows build agents
-  npm run flow -w react-error-overlay
+  yarn flow
 fi
+cd ../..
 
-npm test -w react-dev-utils
+cd packages/react-dev-utils/
+yarn test
+cd ../..
 
-npm test -w babel-plugin-named-asset-import
+cd packages/babel-plugin-named-asset-import/
+yarn test
+cd ../..
 
-npm test -w confusing-browser-globals
+cd packages/confusing-browser-globals/
+yarn test
+cd ../..
 
 # ******************************************************************************
 # First, test the create-react-app development environment.
@@ -107,7 +123,7 @@ npm test -w confusing-browser-globals
 # ******************************************************************************
 
 # Test local build command
-npm run build
+yarn build
 # Check for expected output
 exists build/*.html
 exists build/static/js/*.js
@@ -116,12 +132,12 @@ exists build/static/css/*.css
 exists build/favicon.ico
 
 # Run tests with CI flag
-CI=true npm test
+CI=true yarn test
 # Uncomment when snapshot testing is enabled by default:
 # exists template/src/__snapshots__/App.test.js.snap
 
 # Test local start command
-npm start -- --smoke-test
+yarn start --smoke-test
 
 # Publish the monorepo
 publishToLocalRegistry
@@ -151,24 +167,24 @@ function verify_env_url {
   # Test relative path build
   awk -v n=2 -v s="  \"homepage\": \".\"," 'NR == n {print s} {print}' package.json > tmp && mv tmp package.json
 
-  npm run build
+  yarn build
   # Disabled until this can be tested
   # grep -F -R --exclude=*.map "../../static/" build/ -q; test $? -eq 0 || exit 1
   grep -F -R --exclude=*.map "\"./static/" build/ -q; test $? -eq 0 || exit 1
   grep -F -R --exclude=*.map "\"/static/" build/ -q; test $? -eq 1 || exit 1
 
-  PUBLIC_URL="/anabsolute" npm run build
+  PUBLIC_URL="/anabsolute" yarn build
   grep -F -R --exclude=*.map "/anabsolute/static/" build/ -q; test $? -eq 0 || exit 1
   grep -F -R --exclude=*.map "\"/static/" build/ -q; test $? -eq 1 || exit 1
 
   # Test absolute path build
   sed "2s/.*/  \"homepage\": \"\/testingpath\",/" package.json > tmp && mv tmp package.json
 
-  npm run build
+  yarn build
   grep -F -R --exclude=*.map "/testingpath/static/" build/ -q; test $? -eq 0 || exit 1
   grep -F -R --exclude=*.map "\"/static/" build/ -q; test $? -eq 1 || exit 1
 
-  PUBLIC_URL="https://www.example.net/overridetest" npm run build
+  PUBLIC_URL="https://www.example.net/overridetest" yarn build
   grep -F -R --exclude=*.map "https://www.example.net/overridetest/static/" build/ -q; test $? -eq 0 || exit 1
   grep -F -R --exclude=*.map "\"/static/" build/ -q; test $? -eq 1 || exit 1
   grep -F -R --exclude=*.map "testingpath/static" build/ -q; test $? -eq 1 || exit 1
@@ -176,11 +192,11 @@ function verify_env_url {
   # Test absolute url build
   sed "2s/.*/  \"homepage\": \"https:\/\/www.example.net\/testingpath\",/" package.json > tmp && mv tmp package.json
 
-  npm run build
+  yarn build
   grep -F -R --exclude=*.map "/testingpath/static/" build/ -q; test $? -eq 0 || exit 1
   grep -F -R --exclude=*.map "\"/static/" build/ -q; test $? -eq 1 || exit 1
 
-  PUBLIC_URL="https://www.example.net/overridetest" npm run build
+  PUBLIC_URL="https://www.example.net/overridetest" yarn build
   grep -F -R --exclude=*.map "https://www.example.net/overridetest/static/" build/ -q; test $? -eq 0 || exit 1
   grep -F -R --exclude=*.map "\"/static/" build/ -q; test $? -eq 1 || exit 1
   grep -F -R --exclude=*.map "testingpath/static" build/ -q; test $? -eq 1 || exit 1
@@ -201,7 +217,7 @@ function verify_module_scope {
   echo "import sampleJson from '../sample'" | cat - src/App.js > src/App.js.temp && mv src/App.js.temp src/App.js
 
   # Make sure the build fails
-  npm run build; test $? -eq 1 || exit 1
+  yarn build; test $? -eq 1 || exit 1
   # TODO: check for error message
 
   rm sample.json
@@ -215,7 +231,7 @@ function verify_module_scope {
 cd test-app
 
 # Test the build
-npm run build
+yarn build
 # Check for expected output
 exists build/*.html
 exists build/static/js/*.js
@@ -224,12 +240,12 @@ exists build/static/css/*.css
 exists build/favicon.ico
 
 # Run tests with CI flag
-CI=true npm test
+CI=true yarn test
 # Uncomment when snapshot testing is enabled by default:
 # exists src/__snapshots__/App.test.js.snap
 
 # Test the server
-npm start -- --smoke-test
+yarn start --smoke-test
 
 # Test environment handling
 verify_env_url
@@ -251,7 +267,7 @@ verify_module_scope
 # test -n "$(git diff --staged --name-only)"
 
 # # Test the build
-# npm run build
+# yarn build
 # # Check for expected output
 # exists build/*.html
 # exists build/static/js/*.js
@@ -263,12 +279,12 @@ verify_module_scope
 # # `CI=true yarn test` won't work here because `yarn test` becomes just `jest`.
 # # We should either teach Jest to respect CI env variable, or make
 # # `scripts/test.js` survive ejection (right now it doesn't).
-# npm test --watch=no
+# yarn test --watch=no
 # # Uncomment when snapshot testing is enabled by default:
 # # exists src/__snapshots__/App.test.js.snap
 
 # # Test the server
-# npm start -- --smoke-test
+# yarn start --smoke-test
 
 # # Test environment handling
 # verify_env_url
