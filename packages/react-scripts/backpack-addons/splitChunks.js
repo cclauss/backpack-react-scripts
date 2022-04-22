@@ -15,7 +15,7 @@ module.exports = (isEnvDevelopment) => {
       name: isEnvDevelopment,
       cacheGroups: bpkReactScriptsConfig.vendorsChunkRegex
         ? {
-            vendors: {
+          defaultVendors: {
               test: new RegExp(bpkReactScriptsConfig.vendorsChunkRegex)
             },
           }
