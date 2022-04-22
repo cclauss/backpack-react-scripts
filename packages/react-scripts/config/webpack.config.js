@@ -39,9 +39,6 @@ const createEnvironmentHash = require('./webpack/persistentCache/createEnvironme
 
 const isSsr = require('../backpack-addons/ssr/isSsr');
 
-const appPackageJson = require(paths.appPackageJson);
-
-const camelCase = require('lodash/camelCase');
 const LoadablePlugin = require('@loadable/webpack-plugin');
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
