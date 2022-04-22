@@ -2,9 +2,9 @@ name: Build BRS
 
 on:
   push:
-    branches: [fork]
+    branches: [fork_cra5]
   pull_request:
-    branches: [fork]
+    branches: [fork_cra5]
 
 defaults:
   run:
