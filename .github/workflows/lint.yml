@@ -2,9 +2,9 @@ name: Lint
 
 on:
   push:
-    branches: [fork]
+    branches: [fork_cra5]
   pull_request:
-    branches: [fork]
+    branches: [fork_cra5]
 
 jobs:
   lint:
@@ -17,8 +17,9 @@ jobs:
         with:
           node-version: 16.x
 
+      - name: Install npm@8
+        run: npm i -g npm@8
       - name: Install
-        run: yarn --no-progress --non-interactive --no-lockfile
-
+        run: npm ci --prefer-offline
       - name: Alex
         run: npm run alex
