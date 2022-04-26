@@ -6,6 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 // @remove-on-eject-end
+
+// @brs-begin
+/**
+ * This script is a copy of start.js with an SSR compiler included. It runs
+ * both the `web` and `ssr` builds at once, serving the `web` build exactly as
+ * start does (with a WebpackDevServer), and spawning the `ssr` build in a
+ * forked process.
+ */
+// @brs-end
+
 'use strict';
 
 // Do this as the first thing so that any code reading it knows the right env.

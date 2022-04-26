@@ -235,7 +235,7 @@ module.exports = function (webpackEnv) {
     // This means they will be the "root" imports that are included in JS bundle.
     entry: paths.appIndexJs,
     output: {
-      ...require('../backpack-addons/crossOriginLoading'), // #backpack-addon crossOriginLoading
+      ...require('../backpack-addons/crossOriginLoading'), // #backpack-addons crossOriginLoading
       // The build folder.
       path: isSsr() ? paths.appBuildWeb : paths.appBuild,
       // Add /* filename */ comments to generated require()s in the output.
@@ -444,7 +444,7 @@ module.exports = function (webpackEnv) {
             // The preset includes JSX, Flow, TypeScript, and some ESnext features.
             {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
-              include: require('../backpack-addons/babelIncludePrefixes')(), // #backpack-addon babelIncludePrefixes
+              include: require('../backpack-addons/babelIncludePrefixes')(), // #backpack-addons babelIncludePrefixes
               loader: require.resolve('babel-loader'),
               options: {
                 customize: require.resolve(
@@ -509,7 +509,7 @@ module.exports = function (webpackEnv) {
             {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
               exclude: /\.storybook/,
-              include: require('../backpack-addons/babelIncludePrefixes')(), // #backpack-addon babelIncludePrefixes
+              include: require('../backpack-addons/babelIncludePrefixes')(), // #backpack-addons babelIncludePrefixes
               use: [
                 {
                   loader: require.resolve('babel-loader'),
@@ -808,7 +808,7 @@ module.exports = function (webpackEnv) {
           // both options are optional
           filename: 'static/css/[name].[contenthash:8].css',
           chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
-          ...require('../backpack-addons/ignoreCssWarnings'), // #backpack-addon ignoreCssWarnings
+          ...require('../backpack-addons/ignoreCssWarnings'), // #backpack-addons ignoreCssWarnings
         }),
       // Generate an asset manifest file with the following content:
       // - "files" key: Mapping of all asset filenames to their corresponding
@@ -834,7 +834,7 @@ module.exports = function (webpackEnv) {
           };
         },
       }),
-      require('../backpack-addons/sriEnabled')(), // #backpack-addon sriEnabled
+      require('../backpack-addons/sriEnabled')(), // #backpack-addons sriEnabled
       // Moment.js is an extremely popular library that bundles large locale files
       // by default due to how webpack interprets its code. This is a practical
       // solution that requires the user to opt into importing specific locales.
