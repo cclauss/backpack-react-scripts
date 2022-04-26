@@ -20,6 +20,7 @@ includePrefixes.unshift('bpk-');
 includePrefixes.unshift('@skyscanner/bpk-');
 includePrefixes.unshift('saddlebag-');
 
+// #backpack-addons
 const transformIgnorePattern = `[/\\\\]node_modules[/\\\\](?!${includePrefixes.join(
   '|'
 )}).+\\.(js|jsx|mjs)$`;

@@ -65,6 +65,7 @@ const ssrConfig = ssrConfigFactory('production');
 // functionality to bundle it in parallel
 const compileSsr = isSsr();
 
+// #backpack-addons
 // Just for the case that `ssr.js` exists in `src` folder but not in SSR mode
 const needBuildSsr = !compileSsr && fs.existsSync(paths.appSsrJs);
 
@@ -98,6 +99,7 @@ checkBrowsers(paths.appPath, isInteractive)
         stats = stats.stats[0];
       }
 
+      // #backpack-addons
       // The SSR config still omits a css file - it's not yet possible to omit
       // file output in ExtractTextPlugin. This is not needed so lets clean
       // it up to avoid confusion.
@@ -182,6 +184,7 @@ checkBrowsers(paths.appPath, isInteractive)
 function build(previousFileSizes) {
   console.log('Creating an optimized production build...');
 
+  // #backpack-addons
   let finalConfig = config;
 
   if (compileSsr || needBuildSsr) {
