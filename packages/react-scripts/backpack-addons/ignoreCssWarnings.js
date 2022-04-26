@@ -7,4 +7,4 @@ const ignoreCssWarnings = bpkReactScriptsConfig.ignoreCssWarnings || false;
 
 module.exports = {
     ignoreOrder: ignoreCssWarnings
-}
+};

@@ -8,4 +8,4 @@ const sriEnabled = bpkReactScriptsConfig.sriEnabled || false;
 
 module.exports = {
     crossOriginLoading: sriEnabled ? 'anonymous' : crossOriginLoading
-}
+};

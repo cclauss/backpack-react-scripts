@@ -19,4 +19,4 @@ const ssrRuntimeChunk = {
 module.exports = {
   runtimeChunk,
   ssrRuntimeChunk
-}; 
+};

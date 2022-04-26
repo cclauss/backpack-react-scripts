@@ -24,4 +24,4 @@ function ssrExternals() {
 module.exports = {
   externals,
   ssrExternals
-}; 
+};
