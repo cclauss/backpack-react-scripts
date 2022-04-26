@@ -191,12 +191,6 @@ module.exports = function (webpackEnv) {
     if (preProcessor) {
       loaders.push(
         ...[
-          shouldUseCacheLoader && {
-            loader: require.resolve('cache-loader'),
-            options: {
-              cacheDirectory: paths.cacheLoaderDir,
-            },
-          },
           {
             loader: require.resolve('resolve-url-loader'),
             options: {
@@ -504,6 +498,7 @@ module.exports = function (webpackEnv) {
                 compact: isEnvProduction,
               },
             },
+            // TODO need extract to backpack-addons
             // Process application JS with Babel but without `.storybook` folder.
             // The preset includes JSX, Flow, TypeScript, and some ESnext features.
             {
@@ -745,6 +740,7 @@ module.exports = function (webpackEnv) {
             : undefined
         )
       ),
+      // TODO need extract to backpack-addons
       new HtmlWebpackPlugin(
         Object.assign(
           {},
@@ -755,6 +751,7 @@ module.exports = function (webpackEnv) {
           }
         )
       ),
+      // TODO need extract to backpack-addons
       new HtmlWebpackPlugin(
         Object.assign(
           {},
