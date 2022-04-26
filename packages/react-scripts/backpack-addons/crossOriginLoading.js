@@ -7,5 +7,5 @@ const crossOriginLoading = bpkReactScriptsConfig.crossOriginLoading || false;
 const sriEnabled = bpkReactScriptsConfig.sriEnabled || false;
 
 module.exports = {
-    crossOriginLoading: sriEnabled ? 'anonymous' : crossOriginLoading
+  crossOriginLoading: sriEnabled ? 'anonymous' : crossOriginLoading
 };
