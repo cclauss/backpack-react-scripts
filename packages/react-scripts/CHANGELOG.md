@@ -1,5 +1,17 @@
 # `backpack-react-scripts` Change Log
 
+## 11.0.0
+
+### Breaking
+
+- Rebased onto `upstream/master` v5.0.0 (9673858a3715287c40aef9e800c431c7d45c05a2).
+- This release rebases `backpack-react-scripts` on top of `create-react-app` v5! The major changes have been summarised in the following blog post:
+  [Create React App 5.0](https://github.com/facebook/create-react-app/blob/master/CHANGELOG.md#500-2021-12-14)
+
+### Changed
+
+Remove `cache-loader` and related configration(`cache-loader` is not suggested in creact-react-app v5)
+
 ## 10.0.1
 
 - Extract the existing custom features from the BRS fork branch
