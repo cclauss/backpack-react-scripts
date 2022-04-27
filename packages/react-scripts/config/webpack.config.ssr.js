@@ -125,10 +125,6 @@ module.exports = function (webpackEnv) {
 
   const shouldUseReactRefresh = env.raw.FAST_REFRESH;
 
-  // SHOULD_USE_CACHE_LOADER - this environment variable is not from Create React App side, it shouldn't be added to `env.js` file to get its value, and it should be deleted when cache strategy is ready for all the web teams at Skyscanner
-  // Warning: cache-loader won't be needed when webpack 5 is there
-  // const shouldUseCacheLoader = process.env.SHOULD_USE_CACHE_LOADER;
-
   // common function to get style loaders
   const getStyleLoaders = (
     cssOptions,
@@ -661,8 +657,6 @@ module.exports = function (webpackEnv) {
               exclude: sassModuleRegex,
               use: getStyleLoaders(
                 {
-                  // When using cache-loader, the total count of loaders is up to 4 including cache-loader below the css-loader
-                  // When not using cache-loader, the total count of loaders is 3 not including cache-loader below the css-loader
                   importLoaders: 3,
                   sourceMap: isEnvProduction
                     ? shouldUseSourceMap
@@ -689,8 +683,6 @@ module.exports = function (webpackEnv) {
               ), // #backpack-addons cssModulesEnabled
               use: getStyleLoaders(
                 {
-                  // When using cache-loader, the total count of loaders is up to 4 including cache-loader below the css-loader
-                  // When not using cache-loader, the total count of loaders is 3 not including cache-loader below the css-loader
                   importLoaders: 3,
                   sourceMap: isEnvProduction
                     ? shouldUseSourceMap
