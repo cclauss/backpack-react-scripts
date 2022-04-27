@@ -37,7 +37,7 @@ const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier');
 // @remove-on-eject-end
 const createEnvironmentHash = require('./webpack/persistentCache/createEnvironmentHash');
 
-const isSsr = require('../backpack-addons/ssr/isSsr');
+const isSsr = require('../backpack-addons/ssr/isSsr'); // #backpack-addons ssr
 
 const LoadablePlugin = require('@loadable/webpack-plugin');
 
@@ -774,8 +774,6 @@ module.exports = function (webpackEnv) {
         ...env.stringified,
         'typeof window': '"object"',
       }),
-      // This is necessary to emit hot updates (CSS and Fast Refresh):
-      isEnvDevelopment && new webpack.HotModuleReplacementPlugin(),
       // Experimental hot reloading for React .
       // https://github.com/facebook/react/tree/main/packages/react-refresh
       isEnvDevelopment &&

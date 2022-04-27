@@ -41,7 +41,7 @@ const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier');
 // @remove-on-eject-end
 const createEnvironmentHash = require('./webpack/persistentCache/createEnvironmentHash');
 
-const isSsr = require('../backpack-addons/ssr/isSsr');
+const isSsr = require('../backpack-addons/ssr/isSsr'); // #backpack-addons ssr
 
 // Just for the case that `ssr.js` exists in `src` folder but not in SSR mode
 const needBuildSsr = !isSsr() && fs.existsSync(paths.appSsrJs);
@@ -789,8 +789,6 @@ module.exports = function (webpackEnv) {
         ...env.stringified,
         'typeof window': '"undefined"',
       }),
-      // This is necessary to emit hot updates (CSS and Fast Refresh):
-      isEnvDevelopment && new webpack.HotModuleReplacementPlugin(),
       // Experimental hot reloading for React .
       // https://github.com/facebook/react/tree/main/packages/react-refresh
       isEnvDevelopment &&
