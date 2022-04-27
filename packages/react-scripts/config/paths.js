@@ -63,6 +63,8 @@ module.exports = {
   dotenv: resolveApp('.env'),
   appPath: resolveApp('.'),
   appBuild: resolveApp(buildPath),
+  appBuildWeb: resolveApp('build/web'), // #backpack-addons
+  appBuildSsr: resolveApp('build/ssr'), // #backpack-addons
   appPublic: resolveApp('public'),
   appHtml: resolveApp('public/index.html'),
   appIndexJs: resolveModule(resolveApp, 'src/index'),
@@ -78,6 +80,7 @@ module.exports = {
   appTsBuildInfoFile: resolveApp('node_modules/.cache/tsconfig.tsbuildinfo'),
   swSrc: resolveModule(resolveApp, 'src/service-worker'),
   publicUrlOrPath,
+  appSsrJs: resolveApp('src/ssr.js'), // #backpack-addons
 };
 
 // @remove-on-eject-begin
@@ -89,6 +92,8 @@ module.exports = {
   appPath: resolveApp('.'),
   appBuild: resolveApp(buildPath),
   appPublic: resolveApp('public'),
+  appBuildWeb: resolveApp('build/web'), // #backpack-addons
+  appBuildSsr: resolveApp('build/ssr'), // #backpack-addons
   appHtml: resolveApp('public/index.html'),
   appIndexJs: resolveModule(resolveApp, 'src/index'),
   appPackageJson: resolveApp('package.json'),
@@ -103,6 +108,7 @@ module.exports = {
   appTsBuildInfoFile: resolveApp('node_modules/.cache/tsconfig.tsbuildinfo'),
   swSrc: resolveModule(resolveApp, 'src/service-worker'),
   publicUrlOrPath,
+  appSsrJs: resolveApp('src/ssr.js'), // #backpack-addons
   // These properties only exist before ejecting:
   ownPath: resolveOwn('.'),
   ownNodeModules: resolveOwn('node_modules'), // This is empty on npm 3
@@ -125,7 +131,9 @@ if (
   module.exports = {
     dotenv: resolveOwn(`${templatePath}/.env`),
     appPath: resolveApp('.'),
-    appBuild: resolveOwn(path.join('../..', buildPath)),
+    appBuild: resolveOwn(`../../${buildPath}`),
+    appBuildWeb: resolveOwn('../../build/web'), // #backpack-addons
+    appBuildSsr: resolveOwn('../../build/ssr'), // #backpack-addons
     appPublic: resolveOwn(`${templatePath}/public`),
     appHtml: resolveOwn(`${templatePath}/public/index.html`),
     appIndexJs: resolveModule(resolveOwn, `${templatePath}/src/index`),
@@ -141,6 +149,7 @@ if (
     appTsBuildInfoFile: resolveOwn('node_modules/.cache/tsconfig.tsbuildinfo'),
     swSrc: resolveModule(resolveOwn, `${templatePath}/src/service-worker`),
     publicUrlOrPath,
+    appSsrJs: resolveOwn(`${templatePath}/src/ssr.js`), // #backpack-addons
     // These properties only exist before ejecting:
     ownPath: resolveOwn('.'),
     ownNodeModules: resolveOwn('node_modules'),
