@@ -19,16 +19,24 @@ module.exports = (isEnvDevelopment) => {
   // Automatically split vendor and commons
   // https://twitter.com/wSokra/status/969633336732905474
   // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
+  if(!bpkReactScriptsConfig.enableAutomaticChunking){
+    return {
+      splitChunks: {},
+    };
+  }
+  
+  if(isEnvDevelopment) {
+    return {
+      splitChunks: {
+        ...chunksAndGroups,
+      },
+    };
+  }
+  
   return {
-    splitChunks: bpkReactScriptsConfig.enableAutomaticChunking
-      ? isEnvDevelopment 
-        ? {
-            ...chunksAndGroups,
-          }
-        : {
-            ...chunksAndGroups,
-            name: false,
-          }
-      : {},
+    splitChunks: {
+      ...chunksAndGroups,
+      name: false,
+    },
   };
 };
