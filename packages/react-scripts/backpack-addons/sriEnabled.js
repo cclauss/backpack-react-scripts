@@ -1,6 +1,6 @@
 "use strict";
 
-const SubresourceIntegrityPlugin = require("webpack-subresource-integrity");
+const { SubresourceIntegrityPlugin } = require("webpack-subresource-integrity");
 const paths = require("../config/paths");
 const appPackageJson = require(paths.appPackageJson);
 const bpkReactScriptsConfig = appPackageJson["backpack-react-scripts"] || {};
