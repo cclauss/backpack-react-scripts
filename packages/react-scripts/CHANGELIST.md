@@ -1,5 +1,9 @@
 ## Change List
 
+### 11.0.0-beta.9
+
+- Fix `typescriptFormatter` `MODULE_NOT_FOUND` Error
+
 ### 11.0.0-beta.7
 
 - Switch `hash` to `contenthash` in `webpack.config.ssr.js`
