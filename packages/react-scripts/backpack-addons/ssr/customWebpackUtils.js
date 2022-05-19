@@ -2,7 +2,6 @@
 
 const chalk = require('chalk');
 const formatWebpackMessages = require('react-dev-utils/formatWebpackMessages');
-const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
 const forkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 
 /**
@@ -32,16 +31,7 @@ const isInteractive = true;
  */
 function createCustomCompiler(
   ui,
-  {
-    appName,
-    config,
-    devSocket,
-    urls,
-    useYarn,
-    useTypeScript,
-    tscCompileOnError,
-    webpack,
-  }
+  { appName, config, urls, useYarn, useTypeScript, webpack }
 ) {
   // "Compiler" is a low-level interface to webpack.
   // It lets us listen to some events and provide our own custom messages.
@@ -68,29 +58,16 @@ function createCustomCompiler(
   });
 
   let isFirstCompile = true;
-  let tsMessagesPromise;
-  let tsMessagesResolver;
 
   if (useTypeScript) {
-    compiler.hooks.beforeCompile.tap('beforeCompile', () => {
-      tsMessagesPromise = new Promise(resolve => {
-        tsMessagesResolver = msgs => resolve(msgs);
-      });
-    });
-
     forkTsCheckerWebpackPlugin
       .getCompilerHooks(compiler)
-      .receive.tap('afterTypeScriptCheck', (diagnostics, lints) => {
-        const allMsgs = [...diagnostics, ...lints];
-        const format = message =>
-          `${message.file}\n${typescriptFormatter(message, true)}`;
-
-        tsMessagesResolver({
-          errors: allMsgs.filter(msg => msg.severity === 'error').map(format),
-          warnings: allMsgs
-            .filter(msg => msg.severity === 'warning')
-            .map(format),
-        });
+      .waiting.tap('awaitingTypeScriptCheck', () => {
+        ui.log(
+          chalk.yellow(
+            'Files successfully emitted, waiting for typecheck results...'
+          )
+        );
       });
   }
 
@@ -111,48 +88,6 @@ function createCustomCompiler(
       warnings: true,
       errors: true,
     });
-
-    if (useTypeScript && statsData.errors.length === 0) {
-      const delayedMsg = setTimeout(() => {
-        ui.log(
-          chalk.yellow(
-            'Files successfully emitted, waiting for typecheck results...'
-          )
-        );
-      }, 100);
-
-      const messages = await tsMessagesPromise;
-      clearTimeout(delayedMsg);
-      if (tscCompileOnError) {
-        statsData.warnings.push(...messages.errors);
-      } else {
-        statsData.errors.push(...messages.errors);
-      }
-      statsData.warnings.push(...messages.warnings);
-
-      // Push errors and warnings into compilation result
-      // to show them after page refresh triggered by user.
-      if (tscCompileOnError) {
-        stats.compilation.warnings.push(...messages.errors);
-      } else {
-        stats.compilation.errors.push(...messages.errors);
-      }
-      stats.compilation.warnings.push(...messages.warnings);
-
-      if (messages.errors.length > 0) {
-        if (tscCompileOnError) {
-          devSocket.warnings(messages.errors);
-        } else {
-          devSocket.errors(messages.errors);
-        }
-      } else if (messages.warnings.length > 0) {
-        devSocket.warnings(messages.warnings);
-      }
-
-      if (isInteractive) {
-        ui.clear();
-      }
-    }
 
     const messages = formatWebpackMessages(statsData);
     const isSuccessful = !messages.errors.length && !messages.warnings.length;

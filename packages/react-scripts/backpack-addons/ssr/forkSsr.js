@@ -5,8 +5,8 @@
  * be run by child_process.fork from the start-ssr script.
  */
 
-const chalk = require('chalk');
 const fs = require('fs');
+const chalk = require('chalk');
 const webpack = require('webpack');
 const { prepareUrls } = require('react-dev-utils/WebpackDevServerUtils');
 const paths = require('../../config/paths');
@@ -22,7 +22,6 @@ const config = ssrConfigFactory('development');
 const appName = require(paths.appPackageJson).name;
 
 const useTypeScript = fs.existsSync(paths.appTsConfig);
-const tscCompileOnError = process.env.TSC_COMPILE_ON_ERROR === 'true';
 
 // We don't start a DevServer so we can use dummy URLs
 const urls = prepareUrls(
@@ -32,22 +31,14 @@ const urls = prepareUrls(
   paths.publicUrlOrPath.slice(0, -1)
 );
 
-// We don't start a DevServer so we can drop devSocket messages
-const devSocket = {
-  warnings: () => {},
-  errors: () => {},
-};
-
 const ui = process.send ? new ProcessSendCompilerUi() : new DebugCompilerUi();
 
 const compiler = createCustomCompiler(ui, {
   appName,
   config,
-  devSocket,
   urls,
   useYarn,
   useTypeScript,
-  tscCompileOnError,
   webpack,
 });
 

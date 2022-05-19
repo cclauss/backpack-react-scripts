@@ -136,11 +136,9 @@ checkBrowsers(paths.appPath, isInteractive)
     const compiler = createCustomCompiler(webUi, {
       appName,
       config,
-      devSocket,
       urls,
       useYarn,
       useTypeScript,
-      tscCompileOnError,
       webpack,
     });
 
