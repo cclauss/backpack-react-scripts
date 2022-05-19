@@ -239,13 +239,13 @@ module.exports = function (webpackEnv) {
       pathinfo: isEnvDevelopment,
       // There will be one main bundle, and one file per asynchronous chunk.
       // In development, it does not produce real files.
-      filename: needBuildSsr ? 'ssr.js' : 'ssr.[hash:8].js',
+      filename: needBuildSsr ? 'ssr.js' : 'ssr.[contenthash:8].js',
       libraryTarget: 'commonjs2',
       // There are also additional JS chunk files if you use code splitting.
       chunkFilename: isEnvProduction
         ? 'static/js/[name].[contenthash:8].chunk.js'
         : isEnvDevelopment && 'static/js/[name].chunk.js',
-      assetModuleFilename: 'static/media/[name].[hash][ext]',
+      assetModuleFilename: 'static/media/[name].[contenthash][ext]',
       // webpack uses `publicPath` to determine where the app is being served from.
       // It requires a trailing slash, or the file assets will get an incorrect path.
       // We inferred the "public path" (such as / or /my-project) from homepage.
@@ -327,7 +327,13 @@ module.exports = function (webpackEnv) {
     ...require('../backpack-addons/externals').ssrExternals(), // #backpack-addons externals
     resolve: {
       fallback: {
+        util: false,
+        assert: false,
         crypto: require.resolve('crypto-browserify'),
+        domain: require.resolve('domain-browser'),
+        path: require.resolve('path-browserify'),
+        stream: require.resolve('stream-browserify'),
+        zlib: require.resolve('browserify-zlib'),
       },
       // This allows you to set a fallback for where webpack should look for modules.
       // We placed these paths second because we want `node_modules` to "win"

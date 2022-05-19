@@ -1,5 +1,7 @@
-const clearConsole = require('react-dev-utils/clearConsole');
+'use strict';
+
 const chalk = require('chalk');
+const clearConsole = require('react-dev-utils/clearConsole');
 
 const isInteractive = process.stdout.isTTY;
 
