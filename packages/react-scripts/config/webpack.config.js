@@ -316,14 +316,13 @@ module.exports = function (webpackEnv) {
     },
     ...require('../backpack-addons/externals').externals(isEnvProduction), // #backpack-addons externals
     resolve: {
+      // TODO: Remove this section after PoC
       fallback: {
-        util: false,
-        assert: false,
-        crypto: require.resolve('crypto-browserify'),
-        domain: require.resolve('domain-browser'),
-        path: require.resolve('path-browserify'),
-        stream: require.resolve('stream-browserify'),
-        zlib: require.resolve('browserify-zlib'),
+        crypto: false,
+        domain: false,
+        path: false,
+        stream: false,
+        zlib: false,
       },
       // This allows you to set a fallback for where webpack should look for modules.
       // We placed these paths second because we want `node_modules` to "win"

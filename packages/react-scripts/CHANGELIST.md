@@ -1,5 +1,12 @@
 ## Change List
 
+### 11.0.0-beta.10
+
+- Set all values in `resolve.fallback` to `false` in `webpack.config.js`
+- Remove `assert` and `util` in `webpack.config.js`
+- Delete `fallback` in `resolve` from `webpack.config.ssr.js`
+- Uninstall `browserify-zlib`, `crypto-browserify`, `domain-browser`, `path-browserify` and `stream-browserify`
+
 ### 11.0.0-beta.9
 
 - Fix `typescriptFormatter` `MODULE_NOT_FOUND` Error

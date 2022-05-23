@@ -326,15 +326,6 @@ module.exports = function (webpackEnv) {
     },
     ...require('../backpack-addons/externals').ssrExternals(), // #backpack-addons externals
     resolve: {
-      fallback: {
-        util: false,
-        assert: false,
-        crypto: require.resolve('crypto-browserify'),
-        domain: require.resolve('domain-browser'),
-        path: require.resolve('path-browserify'),
-        stream: require.resolve('stream-browserify'),
-        zlib: require.resolve('browserify-zlib'),
-      },
       // This allows you to set a fallback for where webpack should look for modules.
       // We placed these paths second because we want `node_modules` to "win"
       // if there are any conflicts. This matches Node resolution mechanism.
