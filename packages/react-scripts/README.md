@@ -3,7 +3,7 @@
 ### **Important:** The currently supported version of **CRA** by `backpack-react-scripts` is up to `v4.0.3`. Versions above this may not work.
 
 This package is a fork of [Create React App](https://github.com/facebookincubator/create-react-app) (specifically the
-`react-scripts` package). It's intended to be used in conjuction with `create-react-app` like so:
+`react-scripts` package). It's intended to be used in conjuction with `create-react-app` like so (Ensure you are using Node.js 14+):
 
 ```sh
 npx create-react-app my-app --scripts-version=@skyscanner/backpack-react-scripts --template @skyscanner/backpack --use-npm

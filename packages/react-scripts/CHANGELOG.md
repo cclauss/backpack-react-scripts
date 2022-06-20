@@ -3,6 +3,7 @@
 ## 10.0.2
 
 - Fix security issues
+  - Change README.md
   - Delete the yarn.lock
   - Bump up 'lerna' to version 5.1.0
   - Bump up 'lerna-changelog' to version 2.2.0
