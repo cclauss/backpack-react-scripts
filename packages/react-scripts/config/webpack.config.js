@@ -105,8 +105,8 @@ const hasJsxRuntime = (() => {
   }
 })();
 
-// The istanbul plugin is used to instrument code for coverage information, 
-// pass the config ENABLE_ISTANBUL_PLUGIN=true to enable the plugin. Be cautious this will 
+// The istanbul plugin is used to instrument code for coverage information,
+// pass the config ENABLE_ISTANBUL_PLUGIN=true to enable the plugin. Be cautious this will
 // result in a large increasement on bundle size, so it should never be enabled in prod build.
 const enableIstanbulPlugin = process.env.ENABLE_ISTANBUL_PLUGIN === 'true';
 
@@ -720,7 +720,9 @@ module.exports = function (webpackEnv) {
       ],
     },
     plugins: [
-      new LoadablePlugin(),
+      new LoadablePlugin({ 
+        chunkLoadingGlobal: appPackageJson['backpack-react-scripts']?.['loadable-components']?.chunkLoadingGlobal,
+      }),
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(
         Object.assign(
