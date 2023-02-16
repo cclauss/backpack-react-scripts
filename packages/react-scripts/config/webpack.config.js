@@ -474,7 +474,7 @@ module.exports = function (webpackEnv) {
                 ),
                 // @remove-on-eject-end
                 plugins: [
-                  require.resolve('@loadable/babel-plugin'),
+                  isSsr() && require.resolve('@loadable/babel-plugin'),
                   [
                     require.resolve('babel-plugin-named-asset-import'),
                     {
@@ -720,7 +720,7 @@ module.exports = function (webpackEnv) {
       ],
     },
     plugins: [
-      new LoadablePlugin(),
+      isSsr() && new LoadablePlugin(),
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(
         Object.assign(

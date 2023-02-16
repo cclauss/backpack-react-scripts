@@ -1,6 +1,5 @@
 "use strict";
 
-const postcssNormalize = require("postcss-normalize");
 const paths = require("../config/paths");
 const appPackageJson = require(paths.appPackageJson);
 const bpkReactScriptsConfig = appPackageJson["backpack-react-scripts"] || {};
