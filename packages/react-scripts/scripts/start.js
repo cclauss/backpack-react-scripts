@@ -132,7 +132,7 @@ checkBrowsers(paths.appPath, isInteractive)
       port,
     };
 
-    serverConfig.writeToDisk = filePath => {
+    serverConfig.devMiddleware.writeToDisk = filePath => {
       return /loadable-stats\.json/.test(filePath);
     };
 

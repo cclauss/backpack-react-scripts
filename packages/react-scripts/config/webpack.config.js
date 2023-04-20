@@ -22,7 +22,6 @@ const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
-// const ESLintPlugin = require('eslint-webpack-plugin');
 const paths = require('./paths');
 const modules = require('./modules');
 const getClientEnvironment = require('./env');
@@ -35,7 +34,6 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 // @remove-on-eject-begin
 const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier');
 // @remove-on-eject-end
-const createEnvironmentHash = require('./webpack/persistentCache/createEnvironmentHash');
 
 const isSsr = require('../backpack-addons/ssr/isSsr');
 
@@ -44,7 +42,6 @@ const jsWorkerPool = {
   // name of the pool
   // can be used to create different pools with elsewise identical options
   name: 'js-pool',
-
   // can be set to Infinity for watching builds to keep workers alive
   poolTimeout: 2000,
   // number of jobs a worker processes in parallel
@@ -53,6 +50,7 @@ const jsWorkerPool = {
 };
 
 const appPackageJson = require(paths.appPackageJson);
+const createEnvironmentHash = require('./webpack/persistentCache/createEnvironmentHash');
 
 const camelCase = require('lodash/camelCase');
 const LoadablePlugin = require('@loadable/webpack-plugin');
@@ -76,10 +74,6 @@ const babelRuntimeRegenerator = require.resolve('@babel/runtime/regenerator', {
 // Some apps do not need the benefits of saving a web request, so not inlining the chunk
 // makes for a smoother build process.
 const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false';
-
-// Disabling as they are not currently used in the code see L874
-// const emitErrorsAsWarnings = process.env.ESLINT_NO_DEV_ERRORS === 'true';
-// const disableESLintPlugin = process.env.DISABLE_ESLINT_PLUGIN === 'true';
 
 const imageInlineSizeLimit = parseInt(
   process.env.IMAGE_INLINE_SIZE_LIMIT || '10000'
@@ -115,8 +109,8 @@ const hasJsxRuntime = (() => {
   }
 })();
 
-// The istanbul plugin is used to instrument code for coverage information, 
-// pass the config ENABLE_ISTANBUL_PLUGIN=true to enable the plugin. Be cautious this will 
+// The istanbul plugin is used to instrument code for coverage information,
+// pass the config ENABLE_ISTANBUL_PLUGIN=true to enable the plugin. Be cautious this will
 // result in a large increasement on bundle size, so it should never be enabled in prod build.
 const enableIstanbulPlugin = process.env.ENABLE_ISTANBUL_PLUGIN === 'true';
 
@@ -141,7 +135,7 @@ module.exports = function (webpackEnv) {
 
   // SHOULD_USE_CACHE_LOADER - this environment variable is not from Create React App side, it shouldn't be added to `env.js` file to get its value, and it should be deleted when cache strategy is ready for all the web teams at Skyscanner
   // Warning: cache-loader won't be needed when webpack 5 is there
-  const shouldUseCacheLoader = process.env.SHOULD_USE_CACHE_LOADER;
+  // const shouldUseCacheLoader = process.env.SHOULD_USE_CACHE_LOADER;
 
   // common function to get style loaders
   const getStyleLoaders = (
@@ -211,30 +205,22 @@ module.exports = function (webpackEnv) {
     ].filter(Boolean);
     if (preProcessor) {
       loaders.push(
-        ...[
-          shouldUseCacheLoader && {
-            loader: require.resolve('cache-loader'),
-            options: {
-              cacheDirectory: paths.cacheLoaderDir,
+        {
+          loader: require.resolve('resolve-url-loader'),
+          options: {
+            sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
+            root: paths.appSrc,
+          },
+        },
+        {
+          loader: require.resolve(preProcessor),
+          options: {
+            ...preProcessorOptions, // #backpack-addons sassFunctions
+            ...{
+              sourceMap: true,
             },
           },
-          {
-            loader: require.resolve('resolve-url-loader'),
-            options: {
-              sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
-              root: paths.appSrc,
-            },
-          },
-          {
-            loader: require.resolve(preProcessor),
-            options: {
-              ...preProcessorOptions,  // #backpack-addons sassFunctions
-              ...{
-                sourceMap: true,
-              },
-            },
-          },
-        ].filter(Boolean),
+        }
       );
     }
     return loaders;
@@ -256,7 +242,7 @@ module.exports = function (webpackEnv) {
     // This means they will be the "root" imports that are included in JS bundle.
     entry: paths.appIndexJs,
     output: {
-      ...require('../backpack-addons/crossOriginLoading'),  // #backpack-addon crossOriginLoading
+      ...require('../backpack-addons/crossOriginLoading'), // #backpack-addon crossOriginLoading
       // The build folder.
       path: isSsr() ? paths.appBuildWeb : paths.appBuild,
       // Add /* filename */ comments to generated require()s in the output.
@@ -286,7 +272,7 @@ module.exports = function (webpackEnv) {
       // Prevents conflicts when multiple webpack runtimes (from different apps)
       // are used on the same page.
       // jsonpFunction: `webpackJsonp${appPackageJson.name}`,
-      jsonpFunction: camelCase(appPackageJson.name + 'JsonpCallback'),
+      chunkLoadingGlobal: camelCase(appPackageJson.name + 'JsonpCallback'),
       // this defaults to 'window', but by setting it to 'this' then
       // module chunks which are built will work in web workers as well.
       globalObject: 'this',
@@ -353,7 +339,7 @@ module.exports = function (webpackEnv) {
         // This is only used in production mode
         new CssMinimizerPlugin(),
       ],
-      ...require('../backpack-addons/splitChunks')(isEnvDevelopment),  // #backpack-addons splitChunks
+      ...require('../backpack-addons/splitChunks')(isEnvDevelopment), // #backpack-addons splitChunks
       ...require('../backpack-addons/runtimeChunk').runtimeChunk, // #backpack-addons runtimeChunk
     },
     ...require('../backpack-addons/externals').externals(isEnvProduction), // #backpack-addons externals
@@ -429,7 +415,7 @@ module.exports = function (webpackEnv) {
                 },
               },
             },
-            require('../backpack-addons/amdExcludes'),  // #backpack-addons amdExcludes
+            require('../backpack-addons/amdExcludes'), // #backpack-addons amdExcludes
             // "url" loader works like "file" loader except that it embeds assets
             // smaller than specified limit in bytes as data URLs to avoid requests.
             // A missing `test` is equivalent to a match.
@@ -472,7 +458,7 @@ module.exports = function (webpackEnv) {
             // The preset includes JSX, Flow, TypeScript, and some ESnext features.
             {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
-              include: require('../backpack-addons/babelIncludePrefixes')(),  // #backpack-addon babelIncludePrefixes
+              include: require('../backpack-addons/babelIncludePrefixes')(), // #backpack-addon babelIncludePrefixes
               loader: require.resolve('babel-loader'),
               options: {
                 customize: require.resolve(
@@ -508,27 +494,16 @@ module.exports = function (webpackEnv) {
                 // @remove-on-eject-end
                 plugins: [
                   isSsr() && require.resolve('@loadable/babel-plugin'),
-                  [
-                    require.resolve('babel-plugin-named-asset-import'),
-                    {
-                      loaderMap: {
-                        svg: {
-                          ReactComponent:
-                            '@svgr/webpack?-svgo,+titleProp,+ref![path]',
-                        },
-                      },
-                    },
-                  ],
                   isEnvDevelopment &&
                     shouldUseReactRefresh &&
                     require.resolve('react-refresh/babel'),
                   enableIstanbulPlugin && [
                     require.resolve('babel-plugin-istanbul'),
-                      {
-                        // do not instrument code coverage for tests / storybook files
-                        exclude: ["**/*.test.*", "**/*.stories.*"],
-                      },
-                    ],
+                    {
+                      // do not instrument code coverage for tests / storybook files
+                      exclude: ['**/*.test.*', '**/*.stories.*'],
+                    },
+                  ],
                 ].filter(Boolean),
                 // This is a feature of `babel-loader` for webpack (not Babel itself).
                 // It enables caching results in ./node_modules/.cache/babel-loader/
@@ -544,7 +519,7 @@ module.exports = function (webpackEnv) {
             {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
               exclude: /\.storybook/,
-              include: require('../backpack-addons/babelIncludePrefixes')(),  // #backpack-addon babelIncludePrefixes
+              include: require('../backpack-addons/babelIncludePrefixes')(), // #backpack-addon babelIncludePrefixes
               use: [
                 {
                   loader: require.resolve('thread-loader'),
@@ -585,7 +560,6 @@ module.exports = function (webpackEnv) {
                     ),
                     // @remove-on-eject-end
                     plugins: [
-
                       isEnvDevelopment &&
                         shouldUseReactRefresh &&
                         require.resolve('react-refresh/babel'),
@@ -648,7 +622,9 @@ module.exports = function (webpackEnv) {
             // of CSS.
             // By default we support CSS Modules with the extension .module.css
             {
-              test: require('../backpack-addons/cssModules').getStyleTestRegexes('css'),  // #backpack-addons cssModulesEnabled
+              test: require('../backpack-addons/cssModules').getStyleTestRegexes(
+                'css'
+              ), // #backpack-addons cssModulesEnabled
               exclude: cssModuleRegex,
               use: getStyleLoaders({
                 importLoaders: 1,
@@ -668,7 +644,9 @@ module.exports = function (webpackEnv) {
             // Adds support for CSS Modules (https://github.com/css-modules/css-modules)
             // using the extension .module.css
             {
-              test: require('../backpack-addons/cssModules').getStyleTestRegexes('cssModule'),  // #backpack-addons cssModulesEnabled
+              test: require('../backpack-addons/cssModules').getStyleTestRegexes(
+                'cssModule'
+              ), // #backpack-addons cssModulesEnabled
               use: getStyleLoaders({
                 importLoaders: 1,
                 sourceMap: isEnvProduction
@@ -676,7 +654,8 @@ module.exports = function (webpackEnv) {
                   : isEnvDevelopment,
                 modules: {
                   mode: 'local',
-                  getLocalIdent: require('../backpack-addons/cssModules').getCSSModuleLocalIdent(), // #backpack-addons cssModulesEnabled
+                  getLocalIdent:
+                    require('../backpack-addons/cssModules').getCSSModuleLocalIdent(), // #backpack-addons cssModulesEnabled
                 },
               }),
             },
@@ -684,13 +663,13 @@ module.exports = function (webpackEnv) {
             // By default we support SASS Modules with the
             // extensions .module.scss or .module.sass
             {
-              test: require('../backpack-addons/cssModules').getStyleTestRegexes('sass'), // #backpack-addons cssModulesEnabled
+              test: require('../backpack-addons/cssModules').getStyleTestRegexes(
+                'sass'
+              ), // #backpack-addons cssModulesEnabled
               exclude: sassModuleRegex,
               use: getStyleLoaders(
                 {
-                  // When using cache-loader, the total count of loaders is up to 4 including cache-loader below the css-loader
-                  // When not using cache-loader, the total count of loaders is 3 not including cache-loader below the css-loader
-                  importLoaders: shouldUseCacheLoader ? 4 : 3,
+                  importLoaders: 3,
                   sourceMap: isEnvProduction
                     ? shouldUseSourceMap
                     : isEnvDevelopment,
@@ -699,7 +678,7 @@ module.exports = function (webpackEnv) {
                   },
                 },
                 'sass-loader',
-                require('../backpack-addons/sassFunctions')  // #backpack-addons sassFunctions
+                require('../backpack-addons/sassFunctions') // #backpack-addons sassFunctions
               ),
               // Don't consider CSS imports dead code even if the
               // containing package claims to have no side effects.
@@ -710,22 +689,23 @@ module.exports = function (webpackEnv) {
             // Adds support for CSS Modules, but using SASS
             // using the extension .module.scss or .module.sass
             {
-              test: require('../backpack-addons/cssModules').getStyleTestRegexes('sassModule'), // #backpack-addons cssModulesEnabled
+              test: require('../backpack-addons/cssModules').getStyleTestRegexes(
+                'sassModule'
+              ), // #backpack-addons cssModulesEnabled
               use: getStyleLoaders(
                 {
-                  // When using cache-loader, the total count of loaders is up to 4 including cache-loader below the css-loader
-                  // When not using cache-loader, the total count of loaders is 3 not including cache-loader below the css-loader
-                  importLoaders: shouldUseCacheLoader ? 4 : 3,
+                  importLoaders: 3,
                   sourceMap: isEnvProduction
                     ? shouldUseSourceMap
                     : isEnvDevelopment,
                   modules: {
                     mode: 'local',
-                    getLocalIdent: require('../backpack-addons/cssModules').getCSSModuleLocalIdent(), // #backpack-addons cssModulesEnabled
+                    getLocalIdent:
+                      require('../backpack-addons/cssModules').getCSSModuleLocalIdent(), // #backpack-addons cssModulesEnabled
                   },
                 },
                 'sass-loader',
-                require('../backpack-addons/sassFunctions')  // #backpack-addons sassFunctions
+                require('../backpack-addons/sassFunctions') // #backpack-addons sassFunctions
               ),
             },
             // "file" loader makes sure those assets get served by WebpackDevServer.
@@ -836,7 +816,7 @@ module.exports = function (webpackEnv) {
           // both options are optional
           filename: 'static/css/[name].[contenthash:8].css',
           chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
-          ...require('../backpack-addons/ignoreCssWarnings')  // #backpack-addon ignoreCssWarnings
+          ...require('../backpack-addons/ignoreCssWarnings'), // #backpack-addon ignoreCssWarnings
         }),
       // Generate an asset manifest file with the following content:
       // - "files" key: Mapping of all asset filenames to their corresponding

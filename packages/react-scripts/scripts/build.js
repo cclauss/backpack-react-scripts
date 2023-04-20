@@ -101,8 +101,14 @@ checkBrowsers(paths.appPath, isInteractive)
       // The SSR config still omits a css file - it's not yet possible to omit
       // file output in ExtractTextPlugin. This is not needed so lets clean
       // it up to avoid confusion.
-      const ssrCssPath = path.join(needBuildSsr ? paths.appBuild : paths.appBuildSsr, 'ssr.css');
-      const ssrCssMapPath = path.join(needBuildSsr ? paths.appBuild : paths.appBuildSsr, 'ssr.css.map');
+      const ssrCssPath = path.join(
+        needBuildSsr ? paths.appBuild : paths.appBuildSsr,
+        'ssr.css'
+      );
+      const ssrCssMapPath = path.join(
+        needBuildSsr ? paths.appBuild : paths.appBuildSsr,
+        'ssr.css.map'
+      );
       if (fs.existsSync(ssrCssPath)) {
         fs.unlinkSync(ssrCssPath);
       }
